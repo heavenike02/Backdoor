@@ -2,14 +2,18 @@
 # directory name when running `supabase init`.
 project_id = "nextbase-essential-supabase-playwright"
 
+
+[analytics]
+enabled = false
+
 [api]
 # Port to use for the API URL.
 port = 54321
 # Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
 # endpoints. public and storage are always included.
-schemas = []
+schemas = ["public", "graphql_public"]
 # Extra schemas to add to the search_path of every request.
-extra_search_path = ["extensions"]
+extra_search_path = ["public", "extensions"]
 # The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
 # for accidental or malicious requests.
 max_rows = 1000
@@ -40,14 +44,14 @@ file_size_limit = "50MiB"
 [auth]
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = env(NEXT_PUBLIC_SITE_URL)
+site_url = "${NEXT_PUBLIC_SITE_URL}"
 
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 additional_redirect_urls = [
   "https://localhost:3000",
   "http://localhost:3000",
-  env(NEXT_PUBLIC_SITE_URL),
-  env(NEXT_PUBLIC_SITE_URL) + "/dashboard"
+  "${NEXT_PUBLIC_SITE_URL}",
+  "${NEXT_PUBLIC_SITE_URL}/dashboard"
   ]
 
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 seconds (one
@@ -79,6 +83,5 @@ url = ""
 
 [auth.external.google]
 enabled = true
-client_id = env(GOOGLE_CLIENT_ID)
-secret = env(GOOGLE_SECRET)
-
+client_id = "${GOOGLE_CLIENT_ID}"
+secret = "${GOOGLE_SECRET}"
