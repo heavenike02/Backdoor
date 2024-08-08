@@ -57,6 +57,7 @@
 
 ul[data-type='taskList'] li > label {
   margin-right: 0.2rem;
+  -webkit-user-select: none;
   user-select: none;
 }
 
