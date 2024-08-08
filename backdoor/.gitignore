@@ -11,3 +11,5 @@ playwright/.auth/user.json
 supabase/.temp
 test-results
 .env
+
+.vercel
