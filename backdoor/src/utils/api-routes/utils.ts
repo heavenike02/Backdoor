@@ -2,7 +2,7 @@ import sendgrid from '@sendgrid/mail';
 import { errors } from '../errors';
 import { sendEmailInbucket } from '../sendEmailInbucket';
 
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+//sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 type EmailOptions = {
   to: string;

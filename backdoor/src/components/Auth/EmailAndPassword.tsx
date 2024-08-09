@@ -120,7 +120,7 @@ export const EmailAndPassword = ({
               type="submit"
               variant={'default'}
               className={classNames(
-                'flex w-full justify-center rounded-lg border border-transparent py-2 text-foreground px-4 text-sm font-medium  shadow-sm',
+                'flex w-full justify-center rounded-lg border border-transparent py-2  px-4 text-sm font-medium  shadow-sm',
               )}
             >
               {view === 'sign-in' ? 'Login' : 'Sign up'}
