@@ -4,6 +4,7 @@ import { T } from '@/components/ui/Typography';
 import { fetchSlimOrganizations } from '@/data/user/organizations';
 import { cn } from '@/utils/cn';
 import { DollarSign, FileBox, Home, Settings, UserRound } from 'lucide-react';
+
 import { Suspense } from 'react';
 import { SidebarLink } from './SidebarLink';
 import { OrganizationSwitcher } from './_components/OrganizationSwitcher';
@@ -30,17 +31,22 @@ async function OrganizationSidebarInternal({
         <div className="flex flex-col gap-6 h-full overflow-y-auto">
           <div>
             <SidebarLink
-              label="Organization Home"
+              label="Home"
               href={`/organization/${organizationId}`}
               icon={<Home className="h-5 w-5" />}
             />
             <SidebarLink
-              label="Organization Settings"
+              label="Properties"
+              href={`/organization/${organizationId}/properties`}
+              icon={<Home className="h-5 w-5" />}
+            />
+            <SidebarLink
+              label="Settings"
               href={`/organization/${organizationId}/settings`}
               icon={<Settings className="h-5 w-5" />}
             />
             <SidebarLink
-              label="Organization Members"
+              label="Members"
               href={`/organization/${organizationId}/settings/members`}
               icon={<UserRound className="h-5 w-5" />}
             />

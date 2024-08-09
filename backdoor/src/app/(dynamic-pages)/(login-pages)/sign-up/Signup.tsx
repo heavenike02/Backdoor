@@ -187,7 +187,7 @@ export function SignUp({
                 </CardHeader>
                 <CardContent className="space-y-2 p-0">
                   <RenderProviders
-                    providers={['google', 'github', 'twitter']}
+                    providers={['google']}
                     isLoading={providerMutation.isLoading}
                     onProviderLoginRequested={providerMutation.mutate}
                   />

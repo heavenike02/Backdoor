@@ -77,7 +77,7 @@ export const Email = ({
           ) : null}
         </div>
         <div>
-          <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit">
             {buttonLabelText}
           </Button>
         </div>

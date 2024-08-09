@@ -34,9 +34,7 @@ export default async function Layout({
                 href={`/organization/${organizationId}/settings`}
               >
                 <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
-                <p className="text-muted-foreground group-hover:text-foreground text-sm font-normal">
-                  Organization settings
-                </p>
+                
               </Link>
             </div>
           </div>
