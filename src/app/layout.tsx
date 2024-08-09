@@ -6,15 +6,6 @@ import 'server-only';
 import { AppProviders } from './AppProviders';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// To download the @vercel/speed-insights package using pnpm, run:
-// pnpm add @vercel/speed-insights
-
-// const satoshiFont = localFont({
-//   src: '../fonts/satoshi/Satoshi-Variable.woff2',
-//   display: 'swap',
-//   variable: '--font-satoshi',
-// });
-
 const inter = Inter({
   display: 'swap',
   subsets: ['cyrillic', 'cyrillic-ext', 'latin-ext', 'latin', 'vietnamese'],
