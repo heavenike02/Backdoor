@@ -4,7 +4,10 @@ import { Inter } from 'next/font/google';
 import 'react-tooltip/dist/react-tooltip.css';
 import 'server-only';
 import { AppProviders } from './AppProviders';
-import { SpeedInsights } from '@vercel/speed-insights/next'
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+// To download the @vercel/speed-insights package using pnpm, run:
+// pnpm add @vercel/speed-insights
 
 // const satoshiFont = localFont({
 //   src: '../fonts/satoshi/Satoshi-Variable.woff2',
