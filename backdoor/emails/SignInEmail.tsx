@@ -30,7 +30,7 @@ export default function SignInEmail(props: SignInEmailProps) {
         Thank you for choosing our platform, and we look forward to serving you!
       </Text>
       <Text>Warm regards,</Text>
-      <Text>Nextbase Customer Success Team</Text>
+      <Text> Backdoor Customer Success Team</Text>
     </Html>
   );
 }

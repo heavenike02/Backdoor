@@ -33,7 +33,7 @@ const onboardingFeatures = [
       <p>
         Admin Panel is built in. This means that you can manage a secret area
         within your app where you can manage users and organizations, etc.
-        Nextbase also comes with a maintenance mode in the admin panel.You can
+        Backdoor also comes with a maintenance mode in the admin panel.You can
         use this mode when you are doing maintenance on your app.
       </p>
     ),
@@ -56,7 +56,7 @@ const onboardingFeatures = [
     title: 'Incredible performance with layouts, server components',
     description: (
       <p>
-        Nextbase offers world-class features such as app folder, layouts, server
+        Backdoor offers world-class features such as app folder, layouts, server
         components, and server-side rendering to optimize data fetching and
         provide the best user experience. Layouts such as authenticated layout,
         external page layout, login layout, application admin layout
