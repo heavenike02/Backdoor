@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import 'react-tooltip/dist/react-tooltip.css';
 import 'server-only';
 import { AppProviders } from './AppProviders';
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 // const satoshiFont = localFont({
 //   src: '../fonts/satoshi/Satoshi-Variable.woff2',
@@ -35,6 +36,7 @@ export default async function RootLayout({
       <head></head>
       <body className="bg-background">
         <AppProviders>{children}</AppProviders>
+        <SpeedInsights />
       </body>
     </html>
   );

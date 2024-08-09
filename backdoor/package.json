@@ -53,6 +53,7 @@
     "@tailwindcss/typography": "^0.5.14",
     "@tanstack/react-query": "^4.20.4",
     "@tremor/react": "^3.17.4",
+    "@vercel/speed-insights": "^1.0.12",
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.1",
     "checkbox": "^0.0.1",
