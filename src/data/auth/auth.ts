@@ -96,7 +96,9 @@ export const signInWithProvider = async (
     provider,
     options: {
       redirectTo: redirectToURL.toString(),
+      skipBrowserRedirect: true,
     },
+
   });
 
   if (error) {
