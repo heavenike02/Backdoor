@@ -1,9 +1,10 @@
 'use client';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { MOBILE_MEDIA_QUERY_MATCHER } from '@/constants';
 import { SidebarVisibilityContext } from '@/contexts/SidebarVisibilityContext';
 import useMatchMedia from '@/hooks/useMatchMedia';
 import { useContext } from 'react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export function MobileSidebarShell({
   children,
@@ -17,6 +18,11 @@ export function MobileSidebarShell({
   }
   return (
     <Sheet open={isVisible} onOpenChange={setVisibility}>
+       <SheetTitle>
+  <VisuallyHidden.Root>
+    Menu
+  </VisuallyHidden.Root>
+</SheetTitle>
       <SheetContent side="left">{children}</SheetContent>
     </Sheet>
   );

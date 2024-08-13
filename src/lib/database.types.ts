@@ -7,6 +7,31 @@ export type Json =
   | Json[]
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       account_delete_tokens: {
@@ -28,6 +53,62 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      amenities: {
+        Row: {
+          id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          name: string
+        }
+        Update: {
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      compliance_documents: {
+        Row: {
+          document_type: Database["public"]["Enums"]["document_type"]
+          expiry_date: string
+          file_name: string | null
+          file_path: string | null
+          id: string
+          property_id: string | null
+          renewal_frequency: Database["public"]["Enums"]["renewal_frequency"]
+          upload_date: string | null
+        }
+        Insert: {
+          document_type: Database["public"]["Enums"]["document_type"]
+          expiry_date: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          property_id?: string | null
+          renewal_frequency: Database["public"]["Enums"]["renewal_frequency"]
+          upload_date?: string | null
+        }
+        Update: {
+          document_type?: Database["public"]["Enums"]["document_type"]
+          expiry_date?: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          property_id?: string | null
+          renewal_frequency?: Database["public"]["Enums"]["renewal_frequency"]
+          upload_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_documents_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]
@@ -270,6 +351,199 @@ export type Database = {
         }
         Relationships: []
       }
+      properties: {
+        Row: {
+          address_line_one: string
+          address_line_two: string | null
+          area_size_sqft: number
+          city: string
+          country: string
+          created_at: string | null
+          created_by: string
+          description: string | null
+          id: string
+          is_furnished: boolean | null
+          num_bathrooms: number
+          num_bedrooms: number
+          num_floors: number
+          organization_id: string
+          post_code: string
+          property_type: Database["public"]["Enums"]["property_type"]
+          standalone_type:
+            | Database["public"]["Enums"]["standalone_property_type"]
+            | null
+          state_province_county: string | null
+        }
+        Insert: {
+          address_line_one: string
+          address_line_two?: string | null
+          area_size_sqft?: number
+          city: string
+          country: string
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          id?: string
+          is_furnished?: boolean | null
+          num_bathrooms?: number
+          num_bedrooms?: number
+          num_floors?: number
+          organization_id: string
+          post_code: string
+          property_type: Database["public"]["Enums"]["property_type"]
+          standalone_type?:
+            | Database["public"]["Enums"]["standalone_property_type"]
+            | null
+          state_province_county?: string | null
+        }
+        Update: {
+          address_line_one?: string
+          address_line_two?: string | null
+          area_size_sqft?: number
+          city?: string
+          country?: string
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          id?: string
+          is_furnished?: boolean | null
+          num_bathrooms?: number
+          num_bedrooms?: number
+          num_floors?: number
+          organization_id?: string
+          post_code?: string
+          property_type?: Database["public"]["Enums"]["property_type"]
+          standalone_type?:
+            | Database["public"]["Enums"]["standalone_property_type"]
+            | null
+          state_province_county?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_created_by"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_organization"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_amenities: {
+        Row: {
+          amenity_id: string
+          property_id: string
+        }
+        Insert: {
+          amenity_id: string
+          property_id: string
+        }
+        Update: {
+          amenity_id?: string
+          property_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_amenities_amenity_id_fkey"
+            columns: ["amenity_id"]
+            isOneToOne: false
+            referencedRelation: "amenities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_amenities_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_photos: {
+        Row: {
+          display_order: number | null
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          is_primary: boolean | null
+          property_id: string | null
+          storage_bucket: string
+          upload_date: string | null
+        }
+        Insert: {
+          display_order?: number | null
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id?: string
+          is_primary?: boolean | null
+          property_id?: string | null
+          storage_bucket: string
+          upload_date?: string | null
+        }
+        Update: {
+          display_order?: number | null
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          is_primary?: boolean | null
+          property_id?: string | null
+          storage_bucket?: string
+          upload_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_photos_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          created_at: string | null
+          custom_name: string | null
+          id: string
+          property_id: string | null
+          room_type: Database["public"]["Enums"]["room_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          custom_name?: string | null
+          id?: string
+          property_id?: string | null
+          room_type: Database["public"]["Enums"]["room_type"]
+        }
+        Update: {
+          created_at?: string | null
+          custom_name?: string | null
+          id?: string
+          property_id?: string | null
+          room_type?: Database["public"]["Enums"]["room_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rooms_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -453,6 +727,7 @@ export type Database = {
       }
     }
     Enums: {
+      document_type: "Gas Safety Certificate"
       organization_join_invitation_link_status:
         | "active"
         | "finished_accepted"
@@ -466,6 +741,42 @@ export type Database = {
       organization_member_role: "owner" | "admin" | "member" | "readonly"
       pricing_plan_interval: "day" | "week" | "month" | "year"
       pricing_type: "one_time" | "recurring"
+      property_type: "Unit" | "Complex"
+      renewal_frequency:
+        | "Every Year"
+        | "Every 2 Years"
+        | "Every 5 Years"
+        | "One-time"
+      room_type:
+        | "living room"
+        | "kitchen"
+        | "dining room"
+        | "office"
+        | "laundry room"
+        | "garage"
+        | "attic"
+        | "basement"
+        | "playroom"
+        | "guest room"
+        | "mudroom"
+        | "sunroom"
+        | "pantry"
+        | "home theater"
+        | "bedroom"
+        | "bathroom"
+        | "other"
+      standalone_property_type:
+        | "Detached"
+        | "Semi Detached"
+        | "Terraced"
+        | "Flat"
+        | "Studio Flat"
+        | "Converted Flat"
+        | "Purpose Built"
+        | "Bungalow"
+        | "Corner House"
+        | "Commercial"
+        | "Other"
       subscription_status:
         | "trialing"
         | "active"
@@ -475,311 +786,6 @@ export type Database = {
         | "past_due"
         | "unpaid"
         | "paused"
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-  storage: {
-    Tables: {
-      buckets: {
-        Row: {
-          allowed_mime_types: string[] | null
-          avif_autodetection: boolean | null
-          created_at: string | null
-          file_size_limit: number | null
-          id: string
-          name: string
-          owner: string | null
-          owner_id: string | null
-          public: boolean | null
-          updated_at: string | null
-        }
-        Insert: {
-          allowed_mime_types?: string[] | null
-          avif_autodetection?: boolean | null
-          created_at?: string | null
-          file_size_limit?: number | null
-          id: string
-          name: string
-          owner?: string | null
-          owner_id?: string | null
-          public?: boolean | null
-          updated_at?: string | null
-        }
-        Update: {
-          allowed_mime_types?: string[] | null
-          avif_autodetection?: boolean | null
-          created_at?: string | null
-          file_size_limit?: number | null
-          id?: string
-          name?: string
-          owner?: string | null
-          owner_id?: string | null
-          public?: boolean | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      migrations: {
-        Row: {
-          executed_at: string | null
-          hash: string
-          id: number
-          name: string
-        }
-        Insert: {
-          executed_at?: string | null
-          hash: string
-          id: number
-          name: string
-        }
-        Update: {
-          executed_at?: string | null
-          hash?: string
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
-      objects: {
-        Row: {
-          bucket_id: string | null
-          created_at: string | null
-          id: string
-          last_accessed_at: string | null
-          metadata: Json | null
-          name: string | null
-          owner: string | null
-          owner_id: string | null
-          path_tokens: string[] | null
-          updated_at: string | null
-          version: string | null
-        }
-        Insert: {
-          bucket_id?: string | null
-          created_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
-          metadata?: Json | null
-          name?: string | null
-          owner?: string | null
-          owner_id?: string | null
-          path_tokens?: string[] | null
-          updated_at?: string | null
-          version?: string | null
-        }
-        Update: {
-          bucket_id?: string | null
-          created_at?: string | null
-          id?: string
-          last_accessed_at?: string | null
-          metadata?: Json | null
-          name?: string | null
-          owner?: string | null
-          owner_id?: string | null
-          path_tokens?: string[] | null
-          updated_at?: string | null
-          version?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      s3_multipart_uploads: {
-        Row: {
-          bucket_id: string
-          created_at: string
-          id: string
-          in_progress_size: number
-          key: string
-          owner_id: string | null
-          upload_signature: string
-          version: string
-        }
-        Insert: {
-          bucket_id: string
-          created_at?: string
-          id: string
-          in_progress_size?: number
-          key: string
-          owner_id?: string | null
-          upload_signature: string
-          version: string
-        }
-        Update: {
-          bucket_id?: string
-          created_at?: string
-          id?: string
-          in_progress_size?: number
-          key?: string
-          owner_id?: string | null
-          upload_signature?: string
-          version?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      s3_multipart_uploads_parts: {
-        Row: {
-          bucket_id: string
-          created_at: string
-          etag: string
-          id: string
-          key: string
-          owner_id: string | null
-          part_number: number
-          size: number
-          upload_id: string
-          version: string
-        }
-        Insert: {
-          bucket_id: string
-          created_at?: string
-          etag: string
-          id?: string
-          key: string
-          owner_id?: string | null
-          part_number: number
-          size?: number
-          upload_id: string
-          version: string
-        }
-        Update: {
-          bucket_id?: string
-          created_at?: string
-          etag?: string
-          id?: string
-          key?: string
-          owner_id?: string | null
-          part_number?: number
-          size?: number
-          upload_id?: string
-          version?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
-            columns: ["bucket_id"]
-            isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
-            columns: ["upload_id"]
-            isOneToOne: false
-            referencedRelation: "s3_multipart_uploads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      can_insert_object: {
-        Args: {
-          bucketid: string
-          name: string
-          owner: string
-          metadata: Json
-        }
-        Returns: undefined
-      }
-      extension: {
-        Args: {
-          name: string
-        }
-        Returns: string
-      }
-      filename: {
-        Args: {
-          name: string
-        }
-        Returns: string
-      }
-      foldername: {
-        Args: {
-          name: string
-        }
-        Returns: string[]
-      }
-      get_size_by_bucket: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          size: number
-          bucket_id: string
-        }[]
-      }
-      list_multipart_uploads_with_delimiter: {
-        Args: {
-          bucket_id: string
-          prefix_param: string
-          delimiter_param: string
-          max_keys?: number
-          next_key_token?: string
-          next_upload_token?: string
-        }
-        Returns: {
-          key: string
-          id: string
-          created_at: string
-        }[]
-      }
-      list_objects_with_delimiter: {
-        Args: {
-          bucket_id: string
-          prefix_param: string
-          delimiter_param: string
-          max_keys?: number
-          start_after?: string
-          next_token?: string
-        }
-        Returns: {
-          name: string
-          id: string
-          metadata: Json
-          updated_at: string
-        }[]
-      }
-      search: {
-        Args: {
-          prefix: string
-          bucketname: string
-          limits?: number
-          levels?: number
-          offsets?: number
-          search?: string
-          sortcolumn?: string
-          sortorder?: string
-        }
-        Returns: {
-          name: string
-          id: string
-          updated_at: string
-          created_at: string
-          last_accessed_at: string
-          metadata: Json
-        }[]
-      }
-    }
-    Enums: {
-      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
