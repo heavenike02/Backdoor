@@ -3,7 +3,7 @@ import { SubscriptionCardSmall } from '@/components/SubscriptionCardSmall';
 import { T } from '@/components/ui/Typography';
 import { fetchSlimOrganizations } from '@/data/user/organizations';
 import { cn } from '@/utils/cn';
-import { DollarSign, FileBox, Home, Settings, UserRound } from 'lucide-react';
+import { CreditCard, DollarSign, FileBox, Home, Settings, UserRound } from 'lucide-react';
 
 import { Suspense } from 'react';
 import { SidebarLink } from './SidebarLink';
@@ -54,6 +54,11 @@ async function OrganizationSidebarInternal({
               label="Billing"
               href={`/organization/${organizationId}/settings/billing`}
               icon={<DollarSign className="h-5 w-5" />}
+            />
+            <SidebarLink
+              label="Connect Bank Account"
+              href={`/organization/${organizationId}/bank-connect`}
+              icon={<CreditCard className="h-5 w-5" />}
             />
             <Suspense>
               <ProFeatureGateDialog
