@@ -20,7 +20,7 @@ export default function OrganizationSettingsNavbar({
         <Link href={`/organization/${organizationId}`}>
           <span className="space-x-2 flex items-center">
             <ArrowLeftIcon />
-            <span>Back to Organization catch all</span>
+            <span>Home</span>
           </span>
         </Link>
       </T.P>

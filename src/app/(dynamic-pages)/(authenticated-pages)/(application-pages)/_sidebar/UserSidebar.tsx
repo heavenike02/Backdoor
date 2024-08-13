@@ -7,7 +7,7 @@ export async function UserSidebar() {
   return (
     <div
       className={cn(
-        'flex flex-col justify-between h-full',
+        'flex flex-col  h-full',
         'lg:px-3 lg:py-4 lg:pt-2.5 ',
       )}
     >
@@ -16,7 +16,7 @@ export async function UserSidebar() {
       </div>
       <div className="">
         <SidebarLink
-          label="Dashboard"
+          label="Home"
           href="/dashboard"
           icon={<Home className="h-5 w-5" />}
         />
