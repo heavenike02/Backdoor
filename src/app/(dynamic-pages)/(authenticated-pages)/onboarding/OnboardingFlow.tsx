@@ -63,14 +63,14 @@ function TermsAcceptance({ onSuccess }: TermsAcceptanceProps) {
       <CardHeader>
         <CardTitle>🎉 Welcome Aboard!</CardTitle>
         <CardDescription>
-          Before diving into Nextbase Essential starter kit, please take a
+          Before diving into backdoor, please take a
           moment to go through our updated Terms of Service.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className=" space-y-2">
           <T.Small>
-            These terms and conditions govern the use of Nextbase starter kit’s
+            These terms and conditions govern the use of backdoor’s
             products and services. They're designed to ensure a smooth and
             secure experience for you.
           </T.Small>

@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-type NumericCardProps = {
+type StatCardProps = {
   icon: React.ReactNode
   title: string
   value: string
@@ -17,7 +17,7 @@ type NumericCardProps = {
 
 
 
-export default function NumericCard({ icon, title, value, change }: NumericCardProps) {
+export  function StatCard({ icon, title, value, change }: StatCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
