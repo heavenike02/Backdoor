@@ -72,6 +72,44 @@ export type Database = {
         }
         Relationships: []
       }
+      bedrooms: {
+        Row: {
+          bedroom_number: number
+          beds: number
+          created_at: string | null
+          id: string
+          name: string
+          property_id: string
+          rent_price: number
+        }
+        Insert: {
+          bedroom_number?: number
+          beds?: number
+          created_at?: string | null
+          id?: string
+          name: string
+          property_id: string
+          rent_price: number
+        }
+        Update: {
+          bedroom_number?: number
+          beds?: number
+          created_at?: string | null
+          id?: string
+          name?: string
+          property_id?: string
+          rent_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bedrooms_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       compliance_documents: {
         Row: {
           document_type: Database["public"]["Enums"]["document_type"]
@@ -355,68 +393,59 @@ export type Database = {
         Row: {
           address_line_one: string
           address_line_two: string | null
-          area_size_sqft: number
           city: string
           country: string
-          created_at: string | null
+          created_at: string
           created_by: string
           description: string | null
           id: string
           is_furnished: boolean | null
-          num_bathrooms: number
-          num_bedrooms: number
-          num_floors: number
+          num_bathrooms: number | null
+          num_floors: number | null
           organization_id: string
           post_code: string
-          property_type: Database["public"]["Enums"]["property_type"]
-          standalone_type:
-            | Database["public"]["Enums"]["standalone_property_type"]
-            | null
-          state_province_county: string | null
+          property_type: Database["public"]["Enums"]["property_type"] | null
+          rent_price: number
+          state_province_county: string
+          status: Database["public"]["Enums"]["property_status"]
         }
         Insert: {
           address_line_one: string
           address_line_two?: string | null
-          area_size_sqft?: number
           city: string
           country: string
-          created_at?: string | null
+          created_at?: string
           created_by: string
           description?: string | null
           id?: string
           is_furnished?: boolean | null
-          num_bathrooms?: number
-          num_bedrooms?: number
-          num_floors?: number
+          num_bathrooms?: number | null
+          num_floors?: number | null
           organization_id: string
           post_code: string
-          property_type: Database["public"]["Enums"]["property_type"]
-          standalone_type?:
-            | Database["public"]["Enums"]["standalone_property_type"]
-            | null
-          state_province_county?: string | null
+          property_type?: Database["public"]["Enums"]["property_type"] | null
+          rent_price?: number
+          state_province_county: string
+          status?: Database["public"]["Enums"]["property_status"]
         }
         Update: {
           address_line_one?: string
           address_line_two?: string | null
-          area_size_sqft?: number
           city?: string
           country?: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string
           description?: string | null
           id?: string
           is_furnished?: boolean | null
-          num_bathrooms?: number
-          num_bedrooms?: number
-          num_floors?: number
+          num_bathrooms?: number | null
+          num_floors?: number | null
           organization_id?: string
           post_code?: string
-          property_type?: Database["public"]["Enums"]["property_type"]
-          standalone_type?:
-            | Database["public"]["Enums"]["standalone_property_type"]
-            | null
-          state_province_county?: string | null
+          property_type?: Database["public"]["Enums"]["property_type"] | null
+          rent_price?: number
+          state_province_county?: string
+          status?: Database["public"]["Enums"]["property_status"]
         }
         Relationships: [
           {
@@ -741,7 +770,19 @@ export type Database = {
       organization_member_role: "owner" | "admin" | "member" | "readonly"
       pricing_plan_interval: "day" | "week" | "month" | "year"
       pricing_type: "one_time" | "recurring"
-      property_type: "Unit" | "Complex"
+      property_status: "active" | "closed"
+      property_type:
+        | "Detached"
+        | "Semi Detached"
+        | "Terraced"
+        | "Flat"
+        | "Studio Flat"
+        | "Converted Flat"
+        | "Purpose Built"
+        | "Bungalow"
+        | "Corner House"
+        | "Commercial"
+        | "Other"
       renewal_frequency:
         | "Every Year"
         | "Every 2 Years"
@@ -762,21 +803,7 @@ export type Database = {
         | "sunroom"
         | "pantry"
         | "home theater"
-        | "bedroom"
-        | "bathroom"
         | "other"
-      standalone_property_type:
-        | "Detached"
-        | "Semi Detached"
-        | "Terraced"
-        | "Flat"
-        | "Studio Flat"
-        | "Converted Flat"
-        | "Purpose Built"
-        | "Bungalow"
-        | "Corner House"
-        | "Commercial"
-        | "Other"
       subscription_status:
         | "trialing"
         | "active"
