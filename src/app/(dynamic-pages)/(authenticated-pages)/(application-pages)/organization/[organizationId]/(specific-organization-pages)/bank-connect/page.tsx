@@ -1,6 +1,6 @@
 'use client';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import BankAccountConnection from '../../../../../../../../components/BankAccount/BankAccountConnection';
 import LoadingIndicator from '../../../../../../../../components/BankAccount/LoadingIndicator';
 import Notifications from '../../../../../../../../components/BankAccount/Notification';
@@ -21,7 +21,9 @@ const BankLinkPage: React.FC = () => {
   const handleSuccess = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/go-cardless/bank?action=auth');
+      const response = await axios.get('/api/go-cardless/bank', {
+        params: { action: 'authorize'},
+      });
       if (!response.data || !response.data.link) {
         throw new Error('No Bank Link Data');
       }
