@@ -2,7 +2,7 @@ import cookie from 'cookie';
 import { randomUUID } from 'crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NordigenClient from 'nordigen-node';
-import { getTransactionsSummary } from './utils';
+import { getTransactionsSummary } from '../utils';
 
 const secretId = process.env.GOCARDLESS_SECRET_ID ?? '';
 const secretKey = process.env.GOCARDLESS_SECRET_KEY ?? '';
@@ -14,10 +14,7 @@ const client = new NordigenClient({
   baseUrl: nordigenBaseUrl,
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   console.log('Received request:', req.method, req.query);
   if (req.method === 'GET' && req.query.action === 'authorize') {
     try {
