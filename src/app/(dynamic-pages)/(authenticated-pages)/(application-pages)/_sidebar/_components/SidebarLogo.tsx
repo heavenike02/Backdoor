@@ -16,7 +16,7 @@ export function SidebarLogoAndToggle() {
         <Image
           width={36}
           src={lightLogo}
-          alt="Nextbase Logo"
+          alt="Backdoor Logo"
           className={cn(
             'rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0',
             '-ml-2 ',
@@ -25,14 +25,14 @@ export function SidebarLogoAndToggle() {
         <Image
           width={36}
           src={darkLogo}
-          alt="Nextbase Logo"
+          alt="Backdoor Logo"
           className={cn(
             ' absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100',
             '-ml-2 ',
           )}
         />
 
-        <T.P className="text-sm font-medium text-foreground">Nextbase</T.P>
+        <T.P className="text-sm font-medium text-foreground">Backdoor</T.P>
       </Link>
 
       <SidebarClose />

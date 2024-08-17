@@ -37,102 +37,112 @@ import {
 } from "@/components/ui/table"
 
 import {type Property} from "@/components/PropertyBlock/property-schema"
+import { useToastMutation } from "@/hooks/useToastMutation"
+import { deletePropertyById } from './property-queries';
 
-import { useDeletePropertyMutation } from "./property-queries";
-
-// Define the Property type based on the schema
-
-
-export const columns: ColumnDef<Property>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "standalone_type",
-    header: "Type",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("standalone_type")}</div>
-    ),
-  },
-  {
-    accessorKey: "address_line_one",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Address
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue("address_line_one")}</div>,
-  },
-  {
-    accessorKey: "created_by",
-    header: "Created By",
-    cell: ({ row }) => <div>{row.getValue("created_by")}</div>,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const property = row.original
-      const { mutate: deleteMutation } = useDeletePropertyMutation();
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(property.id)}
-            >
-              Copy Application Link            
-              </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Property</DropdownMenuItem>
-            <DropdownMenuItem>View Property</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => deleteMutation(property.id)}>Delete Property</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+const columnDisplayNames: Record<string, string> = {
+  "property_type": "Property Type",
+  "address_line_one": "Address",
+  "created_by": "Created By",
+};
 
 export function PropertyDataTable({ data }: { data: Property[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const { mutate, isLoading } = useToastMutation(
+    async (propertyId: string) => {
+      return await deletePropertyById(propertyId);
+    },
+    {
+      loadingMessage: 'Deleting property...',
+      successMessage: 'Property deleted successfully',
+      errorMessage: 'Failed to delete property',
+    },
+  );
+
+  const columns: ColumnDef<Property>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "property_type",
+      header: "Property Type",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("property_type")}</div>
+      ),
+    },
+    {
+      accessorKey: "address_line_one",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Address
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div>{row.getValue("address_line_one")}</div>,
+    },
+    {
+      accessorKey: "created_by",
+      header: "Created By",
+      cell: ({ row }) => <div>{row.getValue("created_by")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const property = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(property.id)}
+              >
+                Copy Application Link            
+                </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Edit Property</DropdownMenuItem>
+              
+              <DropdownMenuItem onClick={() => mutate(property.id)} disabled={isLoading}>Delete Property</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
 
   const table = useReactTable({
     data,
@@ -167,7 +177,7 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              View <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -184,7 +194,7 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {columnDisplayNames[column.id] || column.id}
                   </DropdownMenuCheckboxItem>
                 )
               })}

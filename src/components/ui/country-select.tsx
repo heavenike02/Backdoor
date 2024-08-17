@@ -28,6 +28,7 @@ import {
     onChange?: (value: string) => void;
     className?: string;
     placeholder?: string;
+    defaultCountry?: string;
   }
   
   function CountrySelect({
@@ -37,6 +38,7 @@ import {
     onChange = () => {},
     className,
     placeholder = "Country",
+    
   }: CountrySelectProps) {
     const [countries, setCountries] = useState<CountryRegion[]>([]);
   
@@ -48,6 +50,7 @@ import {
   
     return (
       <Select
+      
         onValueChange={(value: string) => {
           onChange(value);
         }}
@@ -66,5 +69,5 @@ import {
     );
   }
   
-  export default CountrySelect;
+  export { CountrySelect };
   

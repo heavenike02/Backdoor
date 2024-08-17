@@ -24,3 +24,5 @@ export function SetDefaultOrganizationButton({
     </Button>
   );
 }
+
+//create a delete organization button

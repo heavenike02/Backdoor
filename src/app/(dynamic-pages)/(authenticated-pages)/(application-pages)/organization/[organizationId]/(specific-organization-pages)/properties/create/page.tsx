@@ -1,8 +1,15 @@
 import {CreatePropertyForm} from "@/components/PropertyBlock/create-property"
-export default function CreateProperty() {
+
+export default function CreateProperty({
+    params,
+}: {
+    params: { organizationId: string };
+}) {
+    const { organizationId } = params;
+   
     return (
         <div>
-            <CreatePropertyForm />
+            <CreatePropertyForm organizationId={organizationId} />
         </div>
     )
 }

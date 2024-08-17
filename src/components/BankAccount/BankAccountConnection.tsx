@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const BankAccountConnection: React.FC<{
   onSuccess: () => void;
   onError: (error: Error) => void;
@@ -21,6 +22,8 @@ const BankAccountConnection: React.FC<{
       >
         Connect Bank Account
       </button>
+     
+
     </div>
   );
 };

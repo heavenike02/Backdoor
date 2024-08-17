@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 // Enum schemas
-export const PropertyTypeSchema = z.enum(['Unit', 'Complex']);
 
-export const StandalonePropertyTypeSchema = z.enum([
+
+export const PropertyTypeSchema = z.enum([
   'Detached', 'Semi Detached', 'Terraced', 'Flat', 'Studio Flat',
   'Converted Flat', 'Purpose Built', 'Bungalow', 'Corner House',
   'Commercial', 'Other'
@@ -27,30 +27,32 @@ export const RenewalFrequencySchema = z.enum([
   'One-time'
 ]);
 
+export const BedroomSchema = z.object({
+  name: z.string().min(1, "Bedroom name is required"),
+  beds: z.number().int().min(1, "Number of beds must be at least 1"),
+  rent_price: z.number().min(0, "Rent price must be a positive number")
+});
+export type Bedroom = z.infer<typeof BedroomSchema>;
 
 
 export const PropertySchema = z.object({
   id: z.string().uuid(),
   created_at: z.string().transform((str) => new Date(str)),
   organization_id: z.string().uuid(),
-  property_type: z.enum(['Unit', 'Complex']),
-  Unit_property_type: z.enum([
-    'Detached', 'Semi Detached', 'Terraced', 'Flat', 'Studio Flat',
-    'Converted Flat', 'Purpose Built', 'Bungalow', 'Corner House',
-    'Commercial', 'Other'
-  ]).nullable(),
-  is_furnished: z.boolean(),
-  num_bathrooms: z.number().int().nonnegative(),
-  num_bedrooms: z.number().int().nonnegative(),
-  area_size_sqft: z.number().int().nonnegative(),
-  num_floors: z.number().int().positive(),
+  
+  property_type: PropertyTypeSchema.nullable(),
+  is_furnished: z.boolean().default(false),
+  num_bathrooms: z.number().int().nonnegative().default(0),
+
+  num_floors: z.number().int().positive().default(1),
   address_line_one: z.string(),
-  address_line_two: z.string().nullable(),
-  status: z.enum(['active', 'closed']),
+  address_line_two: z.string(),
+  status: z.enum(['active', 'closed']).default('active'),
   post_code: z.string(),
   city: z.string(),
-  state_province_county: z.string().nullable(),
+  state_province_county: z.string(),
   country: z.string(),
+  rent_price: z.number().min(0),
   description: z.string().nullable(),
   created_by: z.string().uuid()
 });

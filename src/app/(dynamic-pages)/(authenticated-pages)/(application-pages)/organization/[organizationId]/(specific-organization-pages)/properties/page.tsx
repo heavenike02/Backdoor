@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button"
 import {PropertyPage} from "@/components/PropertyBlock/property-page"
-export default function Properties() {
+import { z } from 'zod';
+
+
+
+export default function Properties({
+  params,
+}: {
+  params: { organizationId: string };
+}) {
+  const { organizationId } = params;
+
   return (
     <div>
-      <PropertyPage />
+      <PropertyPage organizationId={organizationId} />
       
     </div>
   )

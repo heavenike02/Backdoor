@@ -2,11 +2,11 @@
 
 
 -- Create an enum for property types
-CREATE TYPE property_type AS ENUM ('Unit', 'Complex');
+
 CREATE TYPE property_status AS ENUM ('active', 'closed');
 
 -- Create an enum for standalone property types
-CREATE TYPE Unit_property_type AS ENUM (
+CREATE TYPE property_type AS ENUM (
     'Detached', 'Semi Detached', 'Terraced', 'Flat', 'Studio Flat',
     'Converted Flat', 'Purpose Built', 'Bungalow', 'Corner House',
     'Commercial', 'Other'
@@ -17,20 +17,20 @@ CREATE TABLE properties (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     organization_id UUID NOT NULL,
-    property_type property_type NOT NULL,
-    Unit_property_type Unit_property_type,
-    is_furnished BOOLEAN DEFAULT FALSE NOT NULL,
-    num_bathrooms INT DEFAULT 0 NOT NULL,
-    num_bedrooms INT DEFAULT 0 NOT NULL,
-    area_size_sqft INT DEFAULT 0 NOT NULL,
-    num_floors INT DEFAULT 1 NOT NULL,
+
+    property_type property_type,
+    is_furnished BOOLEAN DEFAULT FALSE,
+    num_bathrooms INT DEFAULT 0,
+    
+    num_floors INT DEFAULT 1,
     address_line_one VARCHAR(255) NOT NULL,
     address_line_two VARCHAR(255),
     status property_status DEFAULT 'active' NOT NULL,
     post_code VARCHAR(20) NOT NULL,
     city VARCHAR(100) NOT NULL,
-    state_province_county VARCHAR(100),
+    state_province_county VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL,
+    rent_price INT DEFAULT 0 NOT NULL,
     description TEXT,
     created_by UUID NOT NULL,
     CONSTRAINT fk_organization
@@ -50,7 +50,7 @@ CREATE INDEX idx_properties_created_by ON properties(created_by);
 CREATE TYPE room_type AS ENUM (
     'living room', 'kitchen', 'dining room', 'office', 'laundry room', 
     'garage', 'attic', 'basement', 'playroom', 'guest room', 'mudroom', 
-    'sunroom', 'pantry', 'home theater', 'bedroom', 'bathroom', 'other'
+    'sunroom', 'pantry', 'home theater', 'other'
 );
 
 -- Create a Rooms table
@@ -64,6 +64,9 @@ CREATE TABLE rooms (
 
 -- Add an index to improve query performance
 CREATE INDEX idx_rooms_property_id ON rooms(property_id);
+
+
+
 
 -- Create an Amenities table
 CREATE TABLE amenities (

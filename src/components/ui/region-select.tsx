@@ -75,5 +75,5 @@ import {
     );
   }
   
-  export default RegionSelect;
+  export { RegionSelect };
   
