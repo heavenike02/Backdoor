@@ -9,7 +9,10 @@ export async function GET(req: NextRequest) {
     const organizationId = cookies.organizationId;
 
     if (!organizationId) {
-      return res.status(400).json({ error: 'Organization ID is missing' });
+      return NextResponse.json(
+        { error: 'Organization ID is missing' },
+        { status: 400 },
+      );
     }
     try {
       const ref = req.nextUrl.searchParams.get('ref');

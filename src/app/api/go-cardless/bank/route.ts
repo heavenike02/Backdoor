@@ -14,7 +14,7 @@ const client = new NordigenClient({
   baseUrl: nordigenBaseUrl,
 });
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   console.log('Received request:', req.method, req.nextUrl.searchParams);
   const { searchParams } = new URL(req.url || '');
   const action = searchParams.get('action');
