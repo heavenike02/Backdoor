@@ -12,6 +12,6 @@ const paramsSchema = z.object({
 
 export default function Layout({ params }: LayoutProps) {
   const { organizationId } = paramsSchema.parse(params);
-  document.cookie = `organizationId=${organizationId}; path=/`;
+  const coookie = document.cookie = `organizationId=${organizationId}; path=/`;
   return <BankLinkPage />;
 }

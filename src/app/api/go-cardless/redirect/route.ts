@@ -1,32 +1,47 @@
 import cookie from 'cookie';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  console.log('Received request:', req.method, req.query);
+export async function GET(req: NextRequest) {
+  console.log('Received request:', req.method, req.nextUrl.searchParams);
+
   if (req.method === 'GET') {
-    const cookies = cookie.parse(req.headers.cookie || '');
+    const cookies = cookie.parse(req.headers.get('cookie') || '');
     const organizationId = cookies.organizationId;
+
     if (!organizationId) {
       return res.status(400).json({ error: 'Organization ID is missing' });
     }
     try {
-      if (!req.query.ref) {
+      const ref = req.nextUrl.searchParams.get('ref');
+
+      if (!ref) {
         throw new Error('Ref ID is missing. - No Bank Authorization');
       }
-      console.log('Received Reference ID:', req.query.ref);
-      res.redirect(
-        `${process.env.NEXT_PUBLIC_SITE_URL}/organization/${organizationId}/bank-details`,
-      );
+      console.log('Received Reference ID:', ref);
+
+      const redirectUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/organization/${organizationId}/bank-details`;
+      console.log('Redirecting to:', redirectUrl);
+      return NextResponse.redirect(redirectUrl);
     } catch (error) {
       console.error('Error in fetching bank account data:', {
         message: error.message,
         stack: error.stack,
         response: error.response ? error.response.data : 'No response data',
       });
-      res.status(500).json({ error: 'Failed to fetch bank account data' });
+      return NextResponse.json(
+        { error: 'Failed to handle redirect' },
+        { status: 500 },
+      );
     }
+  }
+}
+
+// Default handler for unsupported methods
+export function handler(req: NextRequest) {
+  if (req.method !== 'GET') {
+    return NextResponse.json(
+      { message: 'Method Not Allowed' },
+      { status: 405 },
+    );
   }
 }

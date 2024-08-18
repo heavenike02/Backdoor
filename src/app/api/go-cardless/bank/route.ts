@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import { randomUUID } from 'crypto';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import NordigenClient from 'nordigen-node';
 import { getTransactionsSummary } from '../utils';
 
@@ -14,9 +14,11 @@ const client = new NordigenClient({
   baseUrl: nordigenBaseUrl,
 });
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  console.log('Received request:', req.method, req.query);
-  if (req.method === 'GET' && req.query.action === 'authorize') {
+export async function GET(req: NextRequest, res: NextResponse) {
+  console.log('Received request:', req.method, req.nextUrl.searchParams);
+  const { searchParams } = new URL(req.url || '');
+  const action = searchParams.get('action');
+  if (req.method === 'GET' && action === 'authorize') {
     try {
       if (!secretId || !secretKey) {
         throw new Error(
@@ -41,7 +43,9 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
         accountSelection: false,
       });
 
-      res.setHeader(
+      const response = NextResponse.json({ link: init.link });
+
+      response.headers.set(
         'Set-Cookie',
         cookie.serialize('requisitionId', init.id, {
           httpOnly: true,
@@ -51,21 +55,21 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
         }),
       );
 
-      res.status(200).json({ link: init.link });
+      return response;
     } catch (error) {
-      console.error('Error in /api/go-cardless/bank:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Internal Server Error',
-        error: error.message,
-      });
+      console.error('Error in /api/go-cardless/bank?action=authorize:', error);
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Internal Server Error',
+          error: error.message,
+        },
+        { status: 500 },
+      );
     }
-  } else if (
-    req.method === 'GET' &&
-    req.query.action === 'transactionsSummary'
-  ) {
+  } else if (req.method === 'GET' && action === 'transactionsSummary') {
     try {
-      const cookies = cookie.parse(req.headers.cookie || '');
+      const cookies = cookie.parse(req.headers.get('cookie') || '');
       const requisitionId = cookies.requisitionId;
 
       if (!requisitionId) {
@@ -77,9 +81,10 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
         await client.requisition.getRequisitionById(requisitionId);
 
       if (!requisitionData.accounts || requisitionData.accounts.length === 0) {
-        return res
-          .status(400)
-          .json({ error: 'No accounts found for this requisitionId' });
+        return NextResponse.json(
+          { error: 'No accounts found for this requisitionId' },
+          { status: 400 },
+        );
       }
 
       const accountId = requisitionData.accounts[0];
@@ -113,14 +118,27 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
       const transactionSummary = getTransactionsSummary(bankAccountData);
       console.log('Fetched Transactions Calculations:', transactionSummary);
 
-      return res.status(200).json(transactionSummary);
+      return NextResponse.json(transactionSummary, { status: 200 });
     } catch (error) {
       console.error('Error in fetching bank account data:', {
         message: error.message,
         stack: error.stack,
         response: error.response ? error.response.data : 'No response data',
       });
-      res.status(500).json({ error: 'Failed to fetch bank account data' });
+      return NextResponse.json(
+        { error: 'Failed to fetch bank account data' },
+        { status: 500 },
+      );
     }
+  }
+}
+
+// Default handler for unsupported methods
+export function handler(req: NextRequest) {
+  if (req.method !== 'GET') {
+    return NextResponse.json(
+      { message: 'Method Not Allowed' },
+      { status: 405 },
+    );
   }
 }
