@@ -47,6 +47,8 @@ const columnDisplayNames: Record<string, string> = {
 };
 
 export function PropertyDataTable({ data }: { data: Property[] }) {
+  const [tableData, setTableData] = React.useState<Property[]>(data); // New state for table data
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -54,7 +56,9 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
 
   const { mutate, isLoading } = useToastMutation(
     async (propertyId: string) => {
-      return await deletePropertyById(propertyId);
+      await deletePropertyById(propertyId);
+      // Fetch new data after deletion
+      setTableData((prev) => prev.filter(property => property.id !== propertyId));
     },
     {
       loadingMessage: 'Deleting property...',
@@ -62,6 +66,11 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
       errorMessage: 'Failed to delete property',
     },
   );
+
+  // Update table data when the initial data prop changes
+  React.useEffect(() => {
+    setTableData(data);
+  }, [data]);
 
   const columns: ColumnDef<Property>[] = [
     {
@@ -145,7 +154,7 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
   ]
 
   const table = useReactTable({
-    data,
+    data: tableData, // Use the new state for table data
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

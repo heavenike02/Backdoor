@@ -7,6 +7,7 @@ import { BedroomSchema, type Bedroom } from "./property-schema"
 
 
 
+
 export async function deletePropertyById(id: string): Promise<SAPayload<string>> {
   const supabase = createSupabaseUserServerActionClient();
   try {

@@ -29,7 +29,7 @@ export default function CreatePropertyLayout({ children }: CreatePropertyLayoutP
   return (
     <>
       
-      <div className=" hidden  pb-16 md:block">
+      <div className="  pb-16 md:block ">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Create Property</h2>
           <p className="text-muted-foreground">

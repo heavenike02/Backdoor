@@ -152,275 +152,282 @@ export function CreatePropertyForm({ organizationId }: { organizationId: string 
   }
 
   return (
-    <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="address_line_one"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address Line One</FormLabel>
-              <FormControl>
-                <Input placeholder="Please enter the first line of the address" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="address_line_two"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address Line Two</FormLabel>
-              <FormControl>
-                <Input placeholder="Please enter the second line of the address" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex flex-row justify-between">
+    // CHANGE: Added max-width and centered the form
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <Form {...form}>
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="post_code"
+            name="address_line_one"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Post Code</FormLabel>
+                <FormLabel>Address Line One</FormLabel>
                 <FormControl>
-                  <Input className="w-[275px]" placeholder="Please enter the post code" {...field} />
+                  <Input className="w-full" placeholder="Please enter the first line of the address" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
 
-
           <FormField
             control={form.control}
-            name="city"
+            name="address_line_two"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>City</FormLabel>
+                <FormLabel>Address Line Two</FormLabel>
                 <FormControl>
-                  <Input className="w-[275px]" placeholder="Please enter the city" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="flex flex-row justify-between">
-
-
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <CountrySelect
-                    className="w-[275px]"
-                    onChange={(value) => form.setValue("country", value)}
-                    priorityOptions={["IE", "UK"]}
-
-                  />
+                  <Input className="w-full" placeholder="Please enter the second line of the address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="state_province_county"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>State/Province/County</FormLabel>
-                <FormControl>
-                  <Input className="w-[275px]" placeholder="Please enter the State..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-
-        <FormField
-          control={form.control}
-          name="property_type"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Property Type</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
+          {/* CHANGE: Wrapped in a flex container that stacks on small screens and aligns horizontally on larger screens */}
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <FormField
+              control={form.control}
+              name="post_code"
+              render={({ field }) => (
+                // CHANGE: Added flex-1 to make items equal width on larger screens
+                <FormItem className="flex-1">
+                  <FormLabel>Post Code</FormLabel>
                   <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-[275px] justify-between",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value
-                        ? property_typeOptions.find(
-                          (item) => item.value === field.value
-                        )?.label
-                        : "Select item"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
+                    <Input className="w-full" placeholder="Please enter the post code" {...field} />
                   </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search property Type..." />
-                    <CommandEmpty>Property Type not found.</CommandEmpty>
-                    <CommandGroup>
-                      {property_typeOptions.map((item) => (
-                        <CommandItem
-                          value={item.label}
-                          key={item.value}
-                          onSelect={() => {
-                            form.setValue("property_type", item.value)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              item.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {item.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Please enter a description of the property" {...field} />
-              </FormControl>
-              
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="rent_price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Rent Price</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="Please enter the total rent price of the property" {...field} />
-              </FormControl>
-              <FormDescription>
-                Please enter the total rent price of the property
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-4 rounded-md border p-4">
-            <BedDouble />
-            <div className="flex-1 space-y-1">
-              <p className="text-sm font-medium leading-none">Add Bedroom</p>
-              <p className="text-sm text-muted-foreground">
-                Add a bedroom to the property to invite a tenant to a specific room
-              </p>
-            </div>
-            <Button type="button" onClick={() => append({ name: "", beds: 1, rent: 0 })}>
-              Add Bedroom
-            </Button>
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                // CHANGE: Added flex-1 to make items equal width on larger screens
+                <FormItem className="flex-1">
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder="Please enter the city" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          {fields.map((field, index) => (
-            <Card key={field.id} className=" shadow-sm">
-              <CardHeader>
-                <div className="flex flex-row justify-between">
-                <CardTitle>Bedroom </CardTitle>
-                <Button type="button" variant="ghost" onClick={() => remove(index)}><X /></Button>
-                </div>
-                <CardDescription>Add Details for Bedroom {index + 1}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                
-                  control={form.control}
-                  name={`bedrooms.${index}.name`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bedroom Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Bedroom Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-row justify-between space-x-4 mt-4">
-                  <FormField
-                    control={form.control}
-                    name={`bedrooms.${index}.beds`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Number of Beds</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="Number of Beds" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`bedrooms.${index}.rent`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Rent Price</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="Rent Price" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-row justify-end mt-4">
-                  
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+          {/* CHANGE: Wrapped in a flex container that stacks on small screens and aligns horizontally on larger screens */}
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                // CHANGE: Added flex-1 to make items equal width on larger screens
+                <FormItem className="flex-1">
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <CountrySelect
+                      className="w-full"
+                      onChange={(value) => form.setValue("country", value)}
+                      priorityOptions={["IE", "UK"]}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button className="align-end" type="submit">Create Property</Button>
-      </form>
-    </Form>
+            <FormField
+              control={form.control}
+              name="state_province_county"
+              render={({ field }) => (
+                // CHANGE: Added flex-1 to make items equal width on larger screens
+                <FormItem className="flex-1">
+                  <FormLabel>State/Province/County</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder="Please enter the State..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="property_type"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Property Type</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        // CHANGE: Adjusted max-width for small screens
+                        className={cn(
+                          "w-full sm:max-w-[275px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? property_typeOptions.find(
+                            (item) => item.value === field.value
+                          )?.label
+                          : "Select item"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full max-w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search property Type..." />
+                      <CommandEmpty>Property Type not found.</CommandEmpty>
+                      <CommandGroup>
+                        {property_typeOptions.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("property_type", item.value)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {item.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea className="w-full" placeholder="Please enter a description of the property" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="rent_price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rent Price</FormLabel>
+                <FormControl>
+                  <Input className="w-full" type="number" placeholder="Please enter the total rent price of the property" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Please enter the total rent price of the property
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 rounded-md border p-4">
+              <BedDouble className="w-8 h-8 text-muted-foreground" />
+              <div className="flex-1 space-y-1 text-center sm:text-left">
+                <p className="text-sm font-medium leading-none">Add Bedroom</p>
+                <p className="text-sm text-muted-foreground">
+                  Add a bedroom to the property to invite a tenant to a specific room
+                </p>
+              </div>
+              <Button 
+                type="button" 
+                onClick={() => append({ name: "", beds: 1, rent: 0 })}
+                className="w-full sm:w-auto"
+              >
+                Add Bedroom
+              </Button>
+            </div>
+
+            {fields.map((field, index) => (
+              <Card key={field.id} className="shadow-sm relative">
+                {/* Updated X button positioning */}
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => remove(index)}
+                  className="absolute top-2 right-2 h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+                <CardHeader>
+                  <CardTitle>Bedroom</CardTitle>
+                  <CardDescription>Add Details for Bedroom {index + 1}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormField
+                    control={form.control}
+                    name={`bedrooms.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bedroom Name</FormLabel>
+                        <FormControl>
+                          <Input className="w-full" placeholder="Bedroom Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 mt-4">
+                    <FormField
+                      control={form.control}
+                      name={`bedrooms.${index}.beds`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Number of Beds</FormLabel>
+                          <FormControl>
+                            <Input className="w-full" type="number" placeholder="Number of Beds" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`bedrooms.${index}.rent`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Rent Price</FormLabel>
+                          <FormControl>
+                            <Input className="w-full" type="number" placeholder="Rent Price" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Button className="w-full sm:w-auto" type="submit">Create Property</Button>
+        </form>
+      </Form>
+    </div>
   )
 }
