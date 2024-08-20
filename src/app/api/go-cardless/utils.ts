@@ -1,10 +1,11 @@
+import { BankAccountType, BookedTransaction } from '@/types/bankAccountType';
 //Transcation Methods TODO: Move to a separate file for business logic and better readbility
-function getTransactionsSummary(bankAccountData: any) {
+function getTransactionsSummary(bankAccountData: BankAccountType) {
   const totalSumTransactions = handleTransactionSumCalculation(
-    bankAccountData.transactions,
+    bankAccountData.transactions.transactions.booked,
   );
   const rentPrice = 1000; //Has to be updated with the actual rent price
-  const calculatedPercentage = handleRentAffordabiltyCheck(
+  const rentAffordabilityPercentage = handleRentAffordabiltyCheck(
     totalSumTransactions,
     rentPrice,
   );
@@ -12,29 +13,29 @@ function getTransactionsSummary(bankAccountData: any) {
   const calulatedTransactionsSummary = {
     totalSumTransactions,
     rentPrice,
-    calculatedPercentage,
+    rentAffordabilityPercentage,
   };
 
   return calulatedTransactionsSummary;
 }
 
-function handleTransactionSumCalculation(transactions: any) {
-  const bookedTransactions = transactions.transactions.booked || [];
-
+function handleTransactionSumCalculation(
+  bookedTransactions: BookedTransaction[],
+) {
   //Calculate the date 90 days ago
   const now = new Date();
   const ninetyDaysAgo = new Date();
   ninetyDaysAgo.setDate(now.getDate() - 90);
 
   // Filter transactions from the last 90 days
-  const recentTransactions = bookedTransactions.filter((transaction: any) => {
+  const recentTransactions = bookedTransactions.filter((transaction) => {
     const transactionDate = new Date(transaction.bookingDate);
     return transactionDate >= ninetyDaysAgo;
   });
 
   // Calculate the total sum of the transactions
   const totalSum = recentTransactions.reduce(
-    (acc: number, transaction: any) => {
+    (acc: number, transaction: BookedTransaction) => {
       return acc + parseFloat(transaction.transactionAmount.amount);
     },
     0,
@@ -61,4 +62,3 @@ function handleRentAffordabiltyCheck(
 }
 
 export { getTransactionsSummary };
-

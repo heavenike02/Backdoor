@@ -1,15 +1,15 @@
 import React from 'react';
 
-interface TransactionSummaryProps {
+export interface TransactionSummaryProps {
   totalSumTransactions: number;
   rentPrice: number;
-  percentage: number;
+  rentAffordabilityPercentage: number;
 }
 
-const TransactionSummary: React.FC<TransactionSummaryProps> = ({
+export const TransactionSummary: React.FC<TransactionSummaryProps> = ({
   totalSumTransactions,
   rentPrice,
-  percentage,
+  rentAffordabilityPercentage,
 }) => {
   return (
     <div className=" shadow-md rounded-md">
@@ -41,7 +41,7 @@ const TransactionSummary: React.FC<TransactionSummaryProps> = ({
               Rent Affordability Percentage
             </td>
             <td className="border border-gray-300 p-2">
-              {percentage.toFixed(2)}%
+              {rentAffordabilityPercentage.toFixed(2)}%
             </td>
           </tr>
         </tbody>

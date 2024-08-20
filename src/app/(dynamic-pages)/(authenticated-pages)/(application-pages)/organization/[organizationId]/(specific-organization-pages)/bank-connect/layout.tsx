@@ -1,12 +1,9 @@
 'use client';
-
 import { z } from 'zod';
 import BankLinkPage from './page';
 
 interface LayoutProps {
-  children: React.ReactNode;
   params: object;
-  navbar: boolean;
 }
 
 const paramsSchema = z.object({
@@ -15,6 +12,6 @@ const paramsSchema = z.object({
 
 export default function Layout({ params }: LayoutProps) {
   const { organizationId } = paramsSchema.parse(params);
-  document.cookie = `organizationId=${organizationId}; path=/`;
+  const coookie = document.cookie = `organizationId=${organizationId}; path=/`;
   return <BankLinkPage />;
 }

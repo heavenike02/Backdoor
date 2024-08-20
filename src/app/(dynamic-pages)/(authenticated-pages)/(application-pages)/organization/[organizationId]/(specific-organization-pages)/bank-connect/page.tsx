@@ -9,7 +9,9 @@ interface NotificationsProps {
   message: string;
   type: 'success' | 'error';
 }
-
+//TODO: Add bank ui selction
+//Add change loading to use react loading and notifcation
+//
 const BankLinkPage: React.FC = () => {
   const [link, setLink] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
