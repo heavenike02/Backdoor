@@ -13,11 +13,14 @@ CREATE TYPE property_type AS ENUM (
 );
 
 
+
+
 CREATE TABLE properties (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     organization_id UUID NOT NULL,
-
+    capcity INT DEFAULT 1 NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE,
     property_type property_type,
     is_furnished BOOLEAN DEFAULT FALSE,
     num_bathrooms INT DEFAULT 0,
