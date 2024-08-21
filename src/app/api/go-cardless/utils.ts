@@ -1,5 +1,5 @@
 import { BankAccountType, BookedTransaction } from '@/types/bankAccountType';
-//Transcation Methods TODO: Move to a separate file for business logic and better readbility
+//Check is sum is being calulated correctly
 function getTransactionsSummary(bankAccountData: BankAccountType) {
   const totalSumTransactions = handleTransactionSumCalculation(
     bankAccountData.transactions.transactions.booked,
