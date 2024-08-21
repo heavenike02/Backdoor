@@ -1,9 +1,25 @@
 import InstitutionSelector from '@/components/BankAccount/InstitutionSelector';
-import { Institution, Config } from '@/components/BankAccount/utils/types';
+import { Config, Institution } from '@/components/BankAccount/utils/types';
 import '@public/nordigen-bank-ui/selector.css';
-import React from 'react';
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import LoadingIndicator from '../../../../../../../../components/BankAccount/LoadingIndicator';
+import Notifications from '../../../../../../../../components/BankAccount/Notification';
+
+interface NotificationsProps {
+  message: string;
+  type: 'success' | 'error';
+}
 
 const institutionList: Institution[] = [
+  {
+    id: 'SANDBOXFINANCE_SFIN0000',
+    name: 'SandBox Finance(TEST BANK)',
+    bic: 'sandbox',
+    transaction_total_days: '540',
+    countries: ['GB'],
+    logo: 'https://cdn-logos.gocardless.com/ais/SANDBOXFINANCE_SFIN0000.png',
+  },
   {
     id: 'ABNAMRO_ABNAGB2LXXX',
     name: 'ABN AMRO Bank Commercial',
@@ -119,12 +135,66 @@ const config: Config = {
   },
 };
 
-const BankSelectorPage: React.FC = () => {
+const BankLinkPage: React.FC = () => {
+  const [institutionId, setInstitutionId] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notification, setNotification] = useState<NotificationsProps>({
+    message: '',
+    type: 'success',
+  });
+
+  // Callback function to handle institution selection
+  const handleSelectInstitution = useCallback(async (id: string) => {
+    setInstitutionId(id);
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/go-cardless/bank', {
+        params: { action: 'authorize', institutionId: id },
+      });
+      if (!response.data || !response.data.link) {
+        throw new Error('No Bank Link Data');
+      }
+      window.location.href = response.data.link; // Redirect to bank authorization
+    } catch (error) {
+      setNotification({
+        message: 'Error Fetching Bank Link',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Optionally handle side effects related to institutionId here
+  }, [institutionId]);
+
+  const handleError = (error: Error) => {
+    setNotification({
+      message: 'Error connecting bank account',
+      type: 'error',
+    });
+  };
+
   return (
-    <div id="institution-content-wrapper">
-      <InstitutionSelector institutions={institutionList} config={config} />
+    <div className="container mx-auto p-4">
+      {notification.message && (
+        <Notifications
+          message={notification.message}
+          type={notification.type}
+        />
+      )}
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
+        <InstitutionSelector
+          institutions={institutionList}
+          config={config}
+          onSelectInstitution={handleSelectInstitution}
+        />
+      )}
     </div>
   );
 };
 
-export default BankSelectorPage;
+export default BankLinkPage;

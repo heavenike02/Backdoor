@@ -6,7 +6,8 @@ import { Config, Institution } from './utils/types';
 const InstitutionSelector: React.FC<{
   institutions: Institution[];
   config?: Config;
-}> = ({ institutions, config }) => {
+  onSelectInstitution: (id: string) => void; // Callback prop for institution selection
+}> = ({ institutions, config, onSelectInstitution }) => {
   const [i18n, setI18n] = useState({
     country: TranslationMappingList.en['Select your country'],
     institution: TranslationMappingList.en['Select your bank'],
@@ -48,30 +49,47 @@ const InstitutionSelector: React.FC<{
     );
   }, [searchTerm, institutions]);
 
+  const handleInstitutionClick = (
+    e: React.MouseEvent<HTMLDivElement>,
+    id: string,
+  ) => {
+    e.preventDefault(); // Prevent default link navigation
+    onSelectInstitution(id); // Trigger the callback with the selected institution's ID
+  };
   const createInstitutionListView = () => {
     return (
-      <div className="institution-modal-content" id="institution-modal-content">
-        <header id="institution-modal-header">
-          <h2>{i18n.institution}</h2>
-        </header>
-        <div className="institution-search">
-          <input
-            type="text"
-            placeholder={i18n.search}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-        </div>
-        <div className="institution-search">
+      <div className="institution-content-wrapper">
+        <div
+          className=" institution-modal-content"
+          id="institution-modal-content"
+        >
+          <header id="institution-modal-header">
+            <h2>{i18n.institution}</h2>
+          </header>
+          <a href="#" className="back-button">
+            {i18n.goBack}
+          </a>
+          <div className="institution-container institution-search-bx-body m-5">
+            <div className="institution-search">
+              <input
+                id="institution-search"
+                type="text"
+                placeholder={i18n.search}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-box-input"
+              />
+            </div>
+          </div>
           <div className="institution-container">
             {filteredInstitutions.length > 0 ? (
-              institutions.map((inst) => (
+              filteredInstitutions.map((inst) => (
                 <div
                   key={inst.id}
                   className="ob-institution ob-list-institution"
+                  onClick={(e) => handleInstitutionClick(e, inst.id)}
                 >
-                  <a href={inst.id} data-institution={inst.id}>
+                  <a href="#">
                     <img
                       src={inst.logo}
                       alt={inst.name}
@@ -82,9 +100,7 @@ const InstitutionSelector: React.FC<{
                 </div>
               ))
             ) : (
-              <p>
-                {i18n.search}... {i18n.goBack}
-              </p>
+              <p>Not found </p> //update
             )}
           </div>
         </div>
@@ -93,7 +109,7 @@ const InstitutionSelector: React.FC<{
   };
 
   return (
-    <div className="min-w-full flex justify-center items-center h-screen ">
+    <div className="flex justify-center items-center h-screen">
       <div className="container-onboarding">
         {config?.logoUrl && (
           <div className="company-image-wrapper">

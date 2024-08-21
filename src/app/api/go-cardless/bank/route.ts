@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
   console.log('Received request:', req.method, req.nextUrl.searchParams);
   const { searchParams } = new URL(req.url || '');
   const action = searchParams.get('action');
+
   if (req.method === 'GET' && action === 'authorize') {
     try {
       if (!secretId || !secretKey) {
@@ -29,8 +30,11 @@ export async function GET(req: NextRequest) {
       const tokenData = await client.generateToken();
       client.token = tokenData.access;
 
-      //Sandbox test institution id  used for testing at the moment
-      const institutionId = 'SANDBOXFINANCE_SFIN0000';
+      const institutionId = searchParams.get('institutionId') ?? '';
+      if (!institutionId) {
+        throw new Error('Institution ID is missing.');
+      }
+
       const init = await client.initSession({
         redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/go-cardless/redirect`,
         institutionId: institutionId,

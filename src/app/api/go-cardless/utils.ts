@@ -22,7 +22,7 @@ function getTransactionsSummary(bankAccountData: BankAccountType) {
 function handleTransactionSumCalculation(
   bookedTransactions: BookedTransaction[],
 ) {
-  //Calculate the date 90 days ago
+  // Calculate the date 90 days ago
   const now = new Date();
   const ninetyDaysAgo = new Date();
   ninetyDaysAgo.setDate(now.getDate() - 90);
@@ -33,13 +33,19 @@ function handleTransactionSumCalculation(
     return transactionDate >= ninetyDaysAgo;
   });
 
+  // Log filtered transactions
+  console.log('Recent Transactions:', recentTransactions);
+
   // Calculate the total sum of the transactions
   const totalSum = recentTransactions.reduce(
     (acc: number, transaction: BookedTransaction) => {
-      return acc + parseFloat(transaction.transactionAmount.amount);
+      const amount = parseFloat(transaction.transactionAmount.amount);
+      console.log(`Transaction Amount: ${amount}`); // Debug log
+      return acc + amount;
     },
     0,
   );
+
   console.log('Total Sum:', totalSum);
   return totalSum;
 }
