@@ -16,6 +16,9 @@ declare global {
       SENDGRID_API_KEY: string;
       STRIPE_WEBHOOK_SECRET: string;
       ADMIN_EMAIL: string;
+      NORDIGEN_BASE_URL: string;
+      GOCARDLESS_SECRET_ID: string;
+      GOCARDLESS_SECRET_KEY: string;
     }
   }
 }

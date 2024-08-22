@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { TranslationMappingList } from './utils/translationMapping';
-import { Config, Institution } from './utils/types';
+import { Config, Country } from './utils/types';
 
 // Define the component
-const InstitutionSelector: React.FC<{
-  institutions: Institution[];
+const CountrySelector: React.FC<{
+  countries: Country[];
   config?: Config;
-  onSelectInstitution: (id: string) => void; // Callback prop for institution selection
-  onGoBack: () => void; // Callback prop for going back
-}> = ({ institutions, config, onSelectInstitution, onGoBack }) => {
+  onSelectCountry: (id: string) => void; // Callback prop for country selection
+}> = ({ countries, config, onSelectCountry }) => {
   const [i18n, setI18n] = useState({
-    institution: TranslationMappingList.en['Select your bank'],
+    country: TranslationMappingList.en['Select your country'],
     search: TranslationMappingList.en['Search'],
     goBack: TranslationMappingList.en['Go back'],
   });
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredInstitutions, setFilteredInstitutions] =
-    useState(institutions);
+  const [filteredCountries, setfilteredCountries] = useState(countries);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const langQuery = params.get('lang') || 'en';
     const lang = TranslationMappingList[langQuery] ? langQuery : 'en';
     setI18n({
-      institution: TranslationMappingList[lang]['Select your bank'],
+      country: TranslationMappingList[lang]['Select your country'],
       search: TranslationMappingList[lang]['Search'],
       goBack: TranslationMappingList[lang]['Go back'],
     });
@@ -35,45 +33,36 @@ const InstitutionSelector: React.FC<{
     link.rel = 'stylesheet';
     document.head.appendChild(link);
 
-    // Clean up
     return () => {
       document.head.removeChild(link);
     };
   }, []);
   useEffect(() => {
-    setFilteredInstitutions(
-      institutions.filter((inst) =>
-        inst.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    setfilteredCountries(
+      countries.filter((country) =>
+        country.name.toLowerCase().includes(searchTerm.toLowerCase()),
       ),
     );
-  }, [searchTerm, institutions]);
+  }, [searchTerm, countries]);
 
-  const handleInstitutionClick = (
+  const handleCountryClick = (
     e: React.MouseEvent<HTMLDivElement>,
     id: string,
   ) => {
-    e.preventDefault(); // Prevent default link navigation
-    onSelectInstitution(id); // Trigger the callback with the selected institution's ID
+    e.preventDefault();
+    onSelectCountry(id);
   };
-
-  const handleGoBack = () => {
-    onGoBack(); // Call the go back callback
-  };
-
   const createInstitutionListView = () => {
     return (
-      <div className="institution-content-wrapper overflow-auto">
+      <div className="institution-content-wrapper">
         <div
           className=" institution-modal-content"
           id="institution-modal-content"
         >
-          <button onClick={handleGoBack} className="back-button">
-            {i18n.goBack}
-          </button>
           <header id="institution-modal-header">
-            <h2>{i18n.institution}</h2>
+            <h2>{i18n.country}</h2>
           </header>
-          <div className="search-box  m-5">
+          <div className="search-box m-5">
             <input
               id="institution-search"
               className="search-box-input"
@@ -84,20 +73,20 @@ const InstitutionSelector: React.FC<{
             />
           </div>
           <div className="overflow-visible institution-container institution-search-bx-body">
-            {filteredInstitutions.length > 0 ? (
-              filteredInstitutions.map((inst) => (
+            {filteredCountries.length > 0 ? (
+              filteredCountries.map((country) => (
                 <div
-                  key={inst.id}
+                  key={country.id}
                   className="ob-institution ob-list-institution"
-                  onClick={(e) => handleInstitutionClick(e, inst.id)}
+                  onClick={(e) => handleCountryClick(e, country.id)}
                 >
                   <a href="#">
                     <img
-                      src={inst.logo}
-                      alt={inst.name}
+                      src={country.logo}
+                      alt={country.name}
                       className="ob-institution-logo"
                     />
-                    <span className="ob-span-text">{inst.name}</span>
+                    <span className="ob-span-text">{country.name}</span>
                   </a>
                 </div>
               ))
@@ -111,7 +100,7 @@ const InstitutionSelector: React.FC<{
   };
 
   return (
-    <div className="min-w-full h-screen flex justify-center items-center">
+    <div className="flex justify-center items-center h-screen">
       <div className="container-onboarding">
         {config?.logoUrl && (
           <div className="company-image-wrapper">
@@ -136,4 +125,4 @@ const InstitutionSelector: React.FC<{
   );
 };
 
-export default InstitutionSelector;
+export default CountrySelector;

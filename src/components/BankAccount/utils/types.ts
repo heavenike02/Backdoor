@@ -32,3 +32,9 @@ export interface Institution {
   transaction_total_days: string;
   countries: string[];
 }
+
+export interface Country {
+  id: string;
+  name: string;
+  logo: string;
+}

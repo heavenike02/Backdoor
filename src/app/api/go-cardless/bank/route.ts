@@ -14,12 +14,67 @@ const client = new NordigenClient({
   baseUrl: nordigenBaseUrl,
 });
 
+interface TokenCache {
+  accessToken: string | null;
+  accessExpiresAt: number | null;
+  refreshToken: string | null;
+  refreshExpiresAt: number | null;
+}
+
+const tokenCache: TokenCache = {
+  accessToken: null,
+  accessExpiresAt: null,
+  refreshToken: null,
+  refreshExpiresAt: null,
+};
+
+async function getAccessToken(): Promise<string> {
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+  // Check if the access token is still valid
+  if (
+    tokenCache.accessToken &&
+    tokenCache.accessExpiresAt &&
+    tokenCache.accessExpiresAt > currentTime
+  ) {
+    return tokenCache.accessToken!;
+  }
+
+  // Check if the refresh token is still valid
+  if (
+    tokenCache.refreshToken &&
+    tokenCache.refreshExpiresAt &&
+    tokenCache.refreshExpiresAt > currentTime
+  ) {
+    const newTokenData = await client.exchangeToken({
+      refreshToken: tokenCache.refreshToken,
+    });
+
+    tokenCache.accessToken = newTokenData.access;
+    tokenCache.accessExpiresAt = currentTime + newTokenData.access_expires;
+    tokenCache.refreshToken = newTokenData.refresh;
+    tokenCache.refreshExpiresAt = currentTime + newTokenData.refresh_expires;
+
+    return tokenCache.accessToken!;
+  }
+
+  // If no valid access or refresh token, generate a new token
+  const tokenData = await client.generateToken();
+
+  tokenCache.accessToken = tokenData.access;
+  tokenCache.accessExpiresAt = currentTime + tokenData.access_expires;
+  tokenCache.refreshToken = tokenData.refresh;
+  tokenCache.refreshExpiresAt = currentTime + tokenData.refresh_expires;
+
+  return tokenCache.accessToken!;
+}
+
 export async function GET(req: NextRequest) {
   console.log('Received request:', req.method, req.nextUrl.searchParams);
   const { searchParams } = new URL(req.url || '');
   const action = searchParams.get('action');
 
-  if (req.method === 'GET' && action === 'authorize') {
+  if (req.method === 'GET' && action === 'institutions') {
     try {
       if (!secretId || !secretKey) {
         throw new Error(
@@ -27,13 +82,13 @@ export async function GET(req: NextRequest) {
         );
       }
 
-      const tokenData = await client.generateToken();
-      client.token = tokenData.access;
-
       const institutionId = searchParams.get('institutionId') ?? '';
       if (!institutionId) {
         throw new Error('Institution ID is missing.');
       }
+
+      const tokenData = await client.generateToken();
+      client.token = tokenData.access;
 
       const init = await client.initSession({
         redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/go-cardless/redirect`,
@@ -61,7 +116,49 @@ export async function GET(req: NextRequest) {
 
       return response;
     } catch (error) {
-      console.error('Error in /api/go-cardless/bank?action=authorize:', error);
+      console.error(
+        'Error in /api/go-cardless/bank?action=institutions:',
+        error,
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Internal Server Error',
+          error: error.message,
+        },
+        { status: 500 },
+      );
+    }
+  } else if (req.method === 'GET' && action === 'countries') {
+    try {
+      if (!secretId || !secretKey) {
+        throw new Error(
+          'GOCARDLESS_SECRET_ID or SECRET_KEY missing in environment.',
+        );
+      }
+
+      const countryId = searchParams.get('countryId') ?? '';
+      if (!countryId) {
+        throw new Error('Country ID is missing.');
+      }
+      console.log('Country ID:', countryId);
+
+      console.log('Fetching Access Token...');
+      const tokenData = getAccessToken();
+      if (!tokenData) {
+        throw new Error('Failed to get access token.');
+      }
+      console.log('Access Token:', tokenData);
+
+      // Get list of institutions
+      const institutions = await client.institution.getInstitutions({
+        country: countryId,
+      });
+      console.log('Institutions:', institutions);
+
+      return NextResponse.json(institutions);
+    } catch (error) {
+      console.error('Error in /api/go-cardless/bank?action=countries:', error);
       return NextResponse.json(
         {
           success: false,

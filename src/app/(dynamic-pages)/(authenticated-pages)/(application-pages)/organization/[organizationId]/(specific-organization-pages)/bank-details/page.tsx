@@ -6,6 +6,7 @@ import {
   TransactionSummary,
   TransactionSummaryProps,
 } from '@/components/BankAccount/TransactionSummary';
+import { useToastMutation } from '@/hooks/useToastMutation'; // Adjust path
 import axios from 'axios';
 import cookie from 'cookie';
 import React, { useEffect, useRef, useState } from 'react';
@@ -24,6 +25,14 @@ const clearCookies = () => {
   });
 };
 
+const fetchTransactionSummary = async () => {
+  const response = await axios.get('/api/go-cardless/bank', {
+    params: { action: 'transactionsSummary' },
+  });
+  clearCookies(); // Clear cookies after fetching data
+  return response.data;
+};
+
 const BankDetailsPage: React.FC = () => {
   const [data, setData] = useState<TransactionSummaryProps | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -33,32 +42,38 @@ const BankDetailsPage: React.FC = () => {
   const [totalSumTransactions, setTotalSumTransactions] = useState<number>(0);
   const hasFetched = useRef(false);
 
+  const mutation = useToastMutation(fetchTransactionSummary, {
+    loadingMessage: 'Fetching transaction details...',
+    successMessage: (data: TransactionSummaryProps) =>
+      'Data fetched successfully!',
+    errorMessage: (error: Error) => `Error: ${error.message}`,
+    onSuccess: (data) => {
+      setData(data);
+      clearCookies();
+      setLoading(false);
+    },
+    onError: () => {
+      setError('Failed to retreive transaction details');
+      clearCookies();
+      setLoading(false);
+    },
+    onSettled: () => {
+      setTimeout(() => {
+        mutation.reset(); // Clear any lingering notifications after 5 seconds
+      }, 5000);
+      setLoading(false);
+    },
+  });
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (hasFetched.current) {
-        console.log('Already fetched, skipping');
-        return;
-      }
-      hasFetched.current = true;
-
-      try {
-        const response = await axios.get('/api/go-cardless/bank', {
-          params: { action: 'transactionsSummary' },
-        });
-        const fetchedData = response.data;
-        setData(fetchedData);
-        clearCookies();
-      } catch (err) {
-        setError('Error fetching data');
-        clearCookies();
-      } finally {
-        setLoading(false);
-        clearCookies();
-      }
-    };
-
-    fetchData();
-  }, []);
+    if (hasFetched.current) {
+      console.log('Already fetched, skipping');
+      return;
+    }
+    hasFetched.current = true;
+    setLoading(true);
+    mutation.mutate(); // Trigger the fetch on component mount
+  }, [mutation]);
 
   useEffect(() => {
     if (data) {

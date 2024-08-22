@@ -1,6 +1,6 @@
 'use client';
 import { z } from 'zod';
-import BankSelectorPage from './institutions';
+import BankSelectorPage from './page';
 
 interface LayoutProps {
   params: object;
