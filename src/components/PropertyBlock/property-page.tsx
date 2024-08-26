@@ -47,7 +47,9 @@ const PropertyTableWrapper = ({ organizationId }: { organizationId: string }) =>
 // put loading spinner in the center of the page
   if (isLoading) return <div className= "flex justify-center items-center h-50"><LoadingSpinner /></div>
   if (error) return <div>Error loading properties</div>
-  if (!data) return <div>No properties found</div>
+  // if no data is returned, show content that there are no properties
+  if (!data ) return <div>No properties found</div>
+  
 
   return <PropertyDataTable data={data} />
 }
@@ -66,7 +68,7 @@ export function PropertyPage({ organizationId }: { organizationId: string }) {
       </div>
       <PropertyStats />
       <Suspense fallback={<Skeleton className="h-50 w-full" />}>
-        <PropertyTableWrapper organizationId={organizationId} />
+      <PropertyTableWrapper organizationId={organizationId} />
       </Suspense>
     </div>
   )

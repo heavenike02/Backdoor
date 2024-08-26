@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import {PropertyPage} from "@/components/PropertyBlock/property-page"
-import { z } from 'zod';
+import { CreatePropertyForm } from "@/components/PropertyBlock/create-property-form"
+
 
 
 
@@ -14,6 +15,7 @@ export default function Properties({
   return (
     <div>
       <PropertyPage organizationId={organizationId} />
+      
       
     </div>
   )

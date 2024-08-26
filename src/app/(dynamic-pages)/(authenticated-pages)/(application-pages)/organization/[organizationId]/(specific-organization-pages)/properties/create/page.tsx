@@ -1,5 +1,5 @@
-import {CreatePropertyForm} from "@/components/PropertyBlock/create-property"
 
+import {CreatePropertyForm} from "@/components/PropertyBlock/create-property-form"
 export default function CreateProperty({
     params,
 }: {
@@ -9,7 +9,9 @@ export default function CreateProperty({
    
     return (
         <div>
+            
             <CreatePropertyForm organizationId={organizationId} />
+            
         </div>
     )
 }

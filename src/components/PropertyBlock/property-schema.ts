@@ -27,6 +27,8 @@ export const RenewalFrequencySchema = z.enum([
   'One-time'
 ]);
 
+export const RentCycleSchema = z.enum(['Monthly', 'Fortnightly', 'Weekly']);
+
 export const BedroomSchema = z.object({
   name: z.string().min(1, "Bedroom name is required"),
   beds: z.number().int().min(1, "Number of beds must be at least 1"),
@@ -43,7 +45,9 @@ export const PropertySchema = z.object({
   property_type: PropertyTypeSchema.nullable(),
   is_furnished: z.boolean().default(false),
   num_bathrooms: z.number().int().nonnegative().default(0),
-
+  is_parking_available: z.boolean().default(false),
+  is_smoking_allowed: z.boolean().default(false),
+  is_pets_allowed: z.boolean().default(false),
   num_floors: z.number().int().positive().default(1),
   address_line_one: z.string(),
   address_line_two: z.string(),
@@ -53,8 +57,14 @@ export const PropertySchema = z.object({
   state_province_county: z.string(),
   country: z.string(),
   rent_price: z.number().min(0),
+  rent_cycle: RentCycleSchema.default('Monthly'),
+  security_deposit: z.number().min(0).default(0),
+  request_pii: z.boolean().default(false),
   description: z.string().nullable(),
-  created_by: z.string().uuid()
+  created_by: z.string().uuid(),
+  capacity: z.number().int().positive().default(1),
+  is_application_available: z.boolean().default(true),
+  available_from: z.string().nullable().transform((str) => str ? new Date(str) : null),
 });
 
 export type Property = z.infer<typeof PropertySchema>;

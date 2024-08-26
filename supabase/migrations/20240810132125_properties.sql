@@ -1,6 +1,3 @@
-
-
-
 -- Create an enum for property types
 
 CREATE TYPE property_status AS ENUM ('active', 'closed');
@@ -12,6 +9,14 @@ CREATE TYPE property_type AS ENUM (
     'Commercial', 'Other'
 );
 
+CREATE TYPE lease_type AS ENUM (
+    'Monthly', 'Yearly', 'Fixed'
+);
+
+CREATE TYPE rent_cycle AS ENUM (
+    'Monthly', 'Fortnightly', 'Weekly'
+);
+
 
 
 
@@ -19,21 +24,28 @@ CREATE TABLE properties (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     organization_id UUID NOT NULL,
-    capcity INT DEFAULT 1 NOT NULL,
-    is_available BOOLEAN DEFAULT TRUE,
+    capacity INT DEFAULT 1 NOT NULL,
+    is_application_available BOOLEAN DEFAULT TRUE,
+    available_from DATE ,
     property_type property_type,
     is_furnished BOOLEAN DEFAULT FALSE,
     num_bathrooms INT DEFAULT 0,
-    
+    is_parking_available BOOLEAN DEFAULT FALSE,
+    is_smoking_allowed BOOLEAN DEFAULT FALSE,
+    is_pets_allowed BOOLEAN DEFAULT FALSE,
     num_floors INT DEFAULT 1,
     address_line_one VARCHAR(255) NOT NULL,
-    address_line_two VARCHAR(255),
+    address_line_two VARCHAR(255) NOT NULL,
     status property_status DEFAULT 'active' NOT NULL,
     post_code VARCHAR(20) NOT NULL,
     city VARCHAR(100) NOT NULL,
     state_province_county VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL,
     rent_price INT DEFAULT 0 NOT NULL,
+    rent_cycle rent_cycle DEFAULT 'Monthly' NOT NULL,
+    security_deposit INT DEFAULT 0 NOT NULL,
+    --personal information request
+    request_pii BOOLEAN DEFAULT FALSE NOT NULL,
     description TEXT,
     created_by UUID NOT NULL,
     CONSTRAINT fk_organization
@@ -48,6 +60,22 @@ CREATE TABLE properties (
 -- Add indices for better query performance
 CREATE INDEX idx_properties_organization_id ON properties(organization_id);
 CREATE INDEX idx_properties_created_by ON properties(created_by);
+
+
+
+-- Create a Leases table
+CREATE TABLE leases (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
+    lease_length INT NOT NULL,
+    lease_type lease_type NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Add an index to improve query performance
+CREATE INDEX idx_leases_property_id ON leases(property_id);
 
 -- Create an enum for room types
 CREATE TYPE room_type AS ENUM (

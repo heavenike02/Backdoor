@@ -72,6 +72,91 @@ export type Database = {
         }
         Relationships: []
       }
+      applicants: {
+        Row: {
+          annual_income: number | null
+          created_at: string
+          credit_score: number | null
+          current_address: string | null
+          date_of_birth: string | null
+          email: string
+          employment_status: string | null
+          full_name: string
+          id: string
+          phone: string | null
+          user_id: string | null
+        }
+        Insert: {
+          annual_income?: number | null
+          created_at?: string
+          credit_score?: number | null
+          current_address?: string | null
+          date_of_birth?: string | null
+          email: string
+          employment_status?: string | null
+          full_name: string
+          id?: string
+          phone?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          annual_income?: number | null
+          created_at?: string
+          credit_score?: number | null
+          current_address?: string | null
+          date_of_birth?: string | null
+          email?: string
+          employment_status?: string | null
+          full_name?: string
+          id?: string
+          phone?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applicants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      application_documents: {
+        Row: {
+          application_id: string | null
+          document_type: string
+          file_name: string
+          file_path: string
+          id: string
+          upload_date: string | null
+        }
+        Insert: {
+          application_id?: string | null
+          document_type: string
+          file_name: string
+          file_path: string
+          id?: string
+          upload_date?: string | null
+        }
+        Update: {
+          application_id?: string | null
+          document_type?: string
+          file_name?: string
+          file_path?: string
+          id?: string
+          upload_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_documents_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "property_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bedrooms: {
         Row: {
           bedroom_number: number
@@ -170,6 +255,44 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leases: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          lease_length: number
+          lease_type: Database["public"]["Enums"]["lease_type"]
+          property_id: string | null
+          start_date: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          lease_length: number
+          lease_type: Database["public"]["Enums"]["lease_type"]
+          property_id?: string | null
+          start_date: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          lease_length?: number
+          lease_type?: Database["public"]["Enums"]["lease_type"]
+          property_id?: string | null
+          start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leases_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]
@@ -392,58 +515,85 @@ export type Database = {
       properties: {
         Row: {
           address_line_one: string
-          address_line_two: string | null
+          address_line_two: string
+          available_from: string | null
+          capacity: number
           city: string
           country: string
           created_at: string
           created_by: string
           description: string | null
           id: string
+          is_application_available: boolean | null
           is_furnished: boolean | null
+          is_parking_available: boolean | null
+          is_pets_allowed: boolean | null
+          is_smoking_allowed: boolean | null
           num_bathrooms: number | null
           num_floors: number | null
           organization_id: string
           post_code: string
           property_type: Database["public"]["Enums"]["property_type"] | null
+          rent_cycle: Database["public"]["Enums"]["rent_cycle"]
           rent_price: number
+          request_pii: boolean
+          security_deposit: number
           state_province_county: string
           status: Database["public"]["Enums"]["property_status"]
         }
         Insert: {
           address_line_one: string
-          address_line_two?: string | null
+          address_line_two: string
+          available_from?: string | null
+          capacity?: number
           city: string
           country: string
           created_at?: string
           created_by: string
           description?: string | null
           id?: string
+          is_application_available?: boolean | null
           is_furnished?: boolean | null
+          is_parking_available?: boolean | null
+          is_pets_allowed?: boolean | null
+          is_smoking_allowed?: boolean | null
           num_bathrooms?: number | null
           num_floors?: number | null
           organization_id: string
           post_code: string
           property_type?: Database["public"]["Enums"]["property_type"] | null
+          rent_cycle?: Database["public"]["Enums"]["rent_cycle"]
           rent_price?: number
+          request_pii?: boolean
+          security_deposit?: number
           state_province_county: string
           status?: Database["public"]["Enums"]["property_status"]
         }
         Update: {
           address_line_one?: string
-          address_line_two?: string | null
+          address_line_two?: string
+          available_from?: string | null
+          capacity?: number
           city?: string
           country?: string
           created_at?: string
           created_by?: string
           description?: string | null
           id?: string
+          is_application_available?: boolean | null
           is_furnished?: boolean | null
+          is_parking_available?: boolean | null
+          is_pets_allowed?: boolean | null
+          is_smoking_allowed?: boolean | null
           num_bathrooms?: number | null
           num_floors?: number | null
           organization_id?: string
           post_code?: string
           property_type?: Database["public"]["Enums"]["property_type"] | null
+          rent_cycle?: Database["public"]["Enums"]["rent_cycle"]
           rent_price?: number
+          request_pii?: boolean
+          security_deposit?: number
           state_province_county?: string
           status?: Database["public"]["Enums"]["property_status"]
         }
@@ -487,6 +637,54 @@ export type Database = {
           },
           {
             foreignKeyName: "property_amenities_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_applications: {
+        Row: {
+          applicant_id: string | null
+          application_date: string | null
+          desired_move_in_date: string | null
+          id: string
+          last_updated: string | null
+          notes: string | null
+          property_id: string | null
+          status: Database["public"]["Enums"]["application_status"] | null
+        }
+        Insert: {
+          applicant_id?: string | null
+          application_date?: string | null
+          desired_move_in_date?: string | null
+          id?: string
+          last_updated?: string | null
+          notes?: string | null
+          property_id?: string | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+        }
+        Update: {
+          applicant_id?: string | null
+          application_date?: string | null
+          desired_move_in_date?: string | null
+          id?: string
+          last_updated?: string | null
+          notes?: string | null
+          property_id?: string | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_applications_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "applicants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_applications_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
@@ -642,6 +840,60 @@ export type Database = {
           },
         ]
       }
+      tenants: {
+        Row: {
+          applicant_id: string | null
+          created_at: string
+          id: string
+          last_updated: string | null
+          lease_end_date: string | null
+          lease_start_date: string | null
+          property_id: string | null
+          rent_amount: number | null
+          security_deposit: number | null
+          status: Database["public"]["Enums"]["tenant_status"] | null
+        }
+        Insert: {
+          applicant_id?: string | null
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          lease_end_date?: string | null
+          lease_start_date?: string | null
+          property_id?: string | null
+          rent_amount?: number | null
+          security_deposit?: number | null
+          status?: Database["public"]["Enums"]["tenant_status"] | null
+        }
+        Update: {
+          applicant_id?: string | null
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          lease_end_date?: string | null
+          lease_start_date?: string | null
+          property_id?: string | null
+          rent_amount?: number | null
+          security_deposit?: number | null
+          status?: Database["public"]["Enums"]["tenant_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenants_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "applicants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenants_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_private_info: {
         Row: {
           created_at: string | null
@@ -756,7 +1008,9 @@ export type Database = {
       }
     }
     Enums: {
+      application_status: "pending" | "approved" | "rejected"
       document_type: "Gas Safety Certificate"
+      lease_type: "Monthly" | "Yearly" | "Fixed"
       organization_join_invitation_link_status:
         | "active"
         | "finished_accepted"
@@ -788,6 +1042,7 @@ export type Database = {
         | "Every 2 Years"
         | "Every 5 Years"
         | "One-time"
+      rent_cycle: "Monthly" | "Fortnightly" | "Weekly"
       room_type:
         | "living room"
         | "kitchen"
@@ -813,6 +1068,7 @@ export type Database = {
         | "past_due"
         | "unpaid"
         | "paused"
+      tenant_status: "active" | "inactive" | "former"
     }
     CompositeTypes: {
       [_ in never]: never
