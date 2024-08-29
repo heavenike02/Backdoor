@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 
 
-import DatePicker from '@/components/ui/date-picker';
+import { DatePicker } from '@/components/ui/date-picker';
 // You can modify this enum as needed
 const rentCycleOptions = [
   { value: "Weekly", label: "Weekly" },

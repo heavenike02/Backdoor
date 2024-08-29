@@ -16,9 +16,10 @@ import { CalendarIcon } from "lucide-react"
 interface DatePickerProps {
   selected?: Date
   onSelect?: (date: Date | undefined) => void
+  width?: string
 }
 
-export default function DatePicker({ selected, onSelect }: DatePickerProps) {
+export  function DatePicker({ selected, onSelect }: DatePickerProps) {
   const [date, setDate] = React.useState<Date | undefined>(selected)
 
   React.useEffect(() => {
@@ -39,7 +40,7 @@ export default function DatePicker({ selected, onSelect }: DatePickerProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[240px] justify-start text-left font-normal",
+            "w-full   justify-start text-left font-normal", // Updated width
             !date && "text-muted-foreground"
           )}
         >
