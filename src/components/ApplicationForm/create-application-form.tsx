@@ -14,8 +14,9 @@ import { Plus, Users, X } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { formSchema } from './application-schema'
 import { FormData } from './application-types'
-import { PropertyDetails } from './property-details'
-import { FileUpload } from '@/components/ui/file-upload'
+import { PropertyDetails } from "./property-details"
+import { useSAToastMutation } from "@/hooks/useSAToastMutation"
+import { submitApplication } from "./application-queries"
 
 export function CreateApplicationForm({ propertyId }: { propertyId: string }) {
     const { register, control, handleSubmit, formState: { errors }, setValue, watch } = useForm<FormData>({
@@ -35,16 +36,24 @@ export function CreateApplicationForm({ propertyId }: { propertyId: string }) {
         name: "applicants"
     })
 
-    const { toast } = useToast()
+    
+    const mutation = useSAToastMutation(
+        submitApplication,
+        {
+            loadingMessage: 'Submitting your application...',
+            successMessage: 'Application submitted successfully!',
+            errorMessage: 'Failed to submit application.',
+            onSuccess: () => {
+                // Optionally reset the form or redirect
+            },
+        }
+    );
 
     const onSubmit = (data: FormData) => {
+        mutation.mutate(data);
+    };
 
-        // Check for form validation errors
-
-        console.log(data);
-        // Handle form submission
-    }
-
+//deal with errors
     return (
         
         <div className="container mx-auto p-4">

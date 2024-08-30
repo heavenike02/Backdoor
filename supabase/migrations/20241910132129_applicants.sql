@@ -43,11 +43,20 @@ CREATE TABLE property_applications (
     property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
     applicant_id UUID REFERENCES applicants(id) ON DELETE CASCADE,
     status application_status DEFAULT 'pending',
+    occupants_count INT DEFAULT 1,
     desired_move_in_date DATE,
     application_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    pets BOOLEAN DEFAULT FALSE,
+    pet_details TEXT,
     notes TEXT
+
 );
+
+INSERT INTO storage.buckets
+  (id, name)
+VALUES
+  ('application_documents', 'application_documents');
 
 -- Create a table for Application Documents
 CREATE TABLE application_documents (

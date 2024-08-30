@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,9 +13,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -36,9 +35,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import {type Property} from "@/components/PropertyBlock/property-schema"
+import { type Property } from "@/components/PropertyBlock/property-schema"
+import { ShareDialog } from "@/components/ui/share-dialog"
 import { useToastMutation } from "@/hooks/useToastMutation"
-import { deletePropertyById } from './property-queries';
+import { deletePropertyById } from './property-queries'
 
 const columnDisplayNames: Record<string, string> = {
   "property_type": "Property Type",
@@ -73,35 +73,7 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
   }, [data]);
 
   const columns: ColumnDef<Property>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "property_type",
-      header: "Property Type",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("property_type")}</div>
-      ),
-    },
+
     {
       accessorKey: "address_line_one",
       header: ({ column }) => {
@@ -118,9 +90,23 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
       cell: ({ row }) => <div>{row.getValue("address_line_one")}</div>,
     },
     {
+      accessorKey: "property_type",
+      header: "Property Type",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("property_type")}</div>
+      ),
+    },
+    {
       accessorKey: "created_by",
       header: "Created By",
       cell: ({ row }) => <div>{row.getValue("created_by")}</div>,
+    },
+    {
+      id: "share",
+      cell: ({ row }) => {
+        const property = row.original
+        return <ShareDialog propertyId={property.id} />
+      },
     },
     {
       id: "actions",
@@ -138,13 +124,15 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(property.id)}
+                onClick={() => {
+                  const appLink = `${process.env.NEXT_PUBLIC_SITE_URL}/application/${property.id}`; // Use the environment variable
+                  navigator.clipboard.writeText(appLink);
+                }}
               >
-                Copy Application Link            
-                </DropdownMenuItem>
+                Copy Application Link
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Edit Property</DropdownMenuItem>
-              
               <DropdownMenuItem onClick={() => mutate(property.id)} disabled={isLoading}>Delete Property</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -163,12 +151,10 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   })
 
@@ -221,9 +207,9 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -262,8 +248,8 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {/*table.getFilteredSelectedRowModel().rows.length} of{" "}*/}
+          {/*table.getFilteredRowModel().rows.length} row(s) selected.*/}
         </div>
         <div className="space-x-2">
           <Button
