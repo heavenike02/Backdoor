@@ -8,6 +8,7 @@ import {
   Preview,
   Section,
   Text,
+
 } from "@react-email/components";
 import * as React from "react";
 
@@ -29,9 +30,9 @@ export const ApplicationEmail: React.FC<ApplicationEmailProps> = ({
         </Text>
         <Section style={buttonContainer}>
           <Button
-            pX={20}
-            pY={12}
-            style={button}
+          style={{ background: "#000", color: "#fff", padding: "12px 20px" }}
+       
+            
             href={applicationUrl}
           >
             Open Application
