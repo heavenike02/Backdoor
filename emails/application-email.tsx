@@ -14,10 +14,12 @@ import * as React from "react";
 
 interface ApplicationEmailProps {
   applicationUrl: string;
+  applicantName: string;
 }
 
 export const ApplicationEmail: React.FC<ApplicationEmailProps> = ({
   applicationUrl,
+  applicantName,
 }) => (
   <Html>
     <Head />
@@ -25,8 +27,10 @@ export const ApplicationEmail: React.FC<ApplicationEmailProps> = ({
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Application Link</Heading>
+        
         <Text style={text}>
-          You've been sent an application link. Click the button below to access your application:
+        Hi {applicantName},
+          You've been invited to apply to a property on Backdoor. Click the button below to access your application:
         </Text>
         <Section style={buttonContainer}>
           <Button

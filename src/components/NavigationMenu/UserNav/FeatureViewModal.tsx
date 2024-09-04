@@ -8,7 +8,7 @@ const onboardingFeatures = [
       <p>
         Organisations, team members and team invitations is built-in. This means
         that your next SAAS project will allow your customers to manage
-        organisations right off the bat. NextBase comes with Supabase configured
+        organisations right off the bat. Backdoor comes with Supabase configured
         with all the necessary tables to manage members of an organization.
         Every organization also has it's own Stripe plan.
       </p>
@@ -19,7 +19,7 @@ const onboardingFeatures = [
     title: 'User Authentication built in',
     description: (
       <p>
-        Start building your app with NextBase and you'll get a full-featured
+        Start building your app with Backdoor and you'll get a full-featured
         authentication system, out of the box. More than 15 authentication
         providers such as Google, GitHub, Twitter, Facebook, Apple, Discord etc
         are supported.

@@ -14,6 +14,8 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import * as React from "react"
+import { Skeleton } from "@/components/ui/skeleton"
+import Link from 'next/link'; // Add this import
 
 import { Button } from "@/components/ui/button"
 import {
@@ -34,11 +36,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Suspense } from "react"
 
 import { type Property } from "@/components/PropertyBlock/property-schema"
 import { ShareDialog } from "@/components/ui/share-dialog"
 import { useToastMutation } from "@/hooks/useToastMutation"
 import { deletePropertyById } from './property-queries'
+import { Share2 } from "lucide-react"
 
 const columnDisplayNames: Record<string, string> = {
   "property_type": "Property Type",
@@ -105,7 +109,20 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
       id: "share",
       cell: ({ row }) => {
         const property = row.original
-        return <ShareDialog propertyId={property.id} />
+        const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+        return (
+          <>
+            
+            <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>Share  <Share2 className="h-4 w-4" /></Button>
+            <ShareDialog 
+              applicationUrl={`${process.env.NEXT_PUBLIC_SITE_URL}/application/${property.id}`}
+              isOpen={isDialogOpen}
+              onClose={() => setIsDialogOpen(false)}
+            />
+           
+          </>
+        )
       },
     },
     {
@@ -159,6 +176,7 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
   })
 
   return (
+    <Suspense fallback={<Skeleton className="h-50 w-full" />}>
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
@@ -225,10 +243,12 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
+                      <Link href={`/property/${cell.row.original.id}`}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
+                      </Link>
                     </TableCell>
                   ))}
                 </TableRow>
@@ -271,5 +291,6 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
         </div>
       </div>
     </div>
+    </Suspense>
   )
 }

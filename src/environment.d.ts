@@ -19,6 +19,8 @@ declare global {
       NORDIGEN_BASE_URL: string;
       GOCARDLESS_SECRET_ID: string;
       GOCARDLESS_SECRET_KEY: string;
+      RESEND_API_KEY: string;
+      
     }
   }
 }

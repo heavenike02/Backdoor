@@ -10,6 +10,9 @@ import { fetchPropertiesByOrganizationId } from "./property-queries"
 import { useQuery } from '@tanstack/react-query'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { Skeleton } from '../ui/skeleton'
+
+
+
 const PropertyStats = () => (
   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
     <StatCard
@@ -43,6 +46,7 @@ const PropertyTableWrapper = ({ organizationId }: { organizationId: string }) =>
   const { data, isLoading, error } = useQuery({
     queryKey: ['properties', organizationId],
     queryFn: () => fetchPropertiesByOrganizationId(organizationId),
+    
   })
 // put loading spinner in the center of the page
   if (isLoading) return <div className= "flex justify-center items-center h-50"><LoadingSpinner /></div>
