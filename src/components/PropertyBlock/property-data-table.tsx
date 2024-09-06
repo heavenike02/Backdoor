@@ -50,7 +50,7 @@ const columnDisplayNames: Record<string, string> = {
   "created_by": "Created By",
 };
 
-export function PropertyDataTable({ data }: { data: Property[] }) {
+export function PropertyDataTable({ data, organizationId }: { data: Property[], organizationId: string }) {
   const [tableData, setTableData] = React.useState<Property[]>(data); // New state for table data
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -243,7 +243,12 @@ export function PropertyDataTable({ data }: { data: Property[] }) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      <Link href={`/property/${cell.row.original.id}`}>
+                     
+                     
+                  <Link href={`/organization/${organizationId}/properties/${cell.row.original.id}/view`}>
+
+
+
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

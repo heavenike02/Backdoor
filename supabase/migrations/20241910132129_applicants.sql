@@ -40,6 +40,7 @@ CREATE TABLE screening_invitations (
 -- Create a table for Property Applications
 CREATE TABLE property_applications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
     property_id UUID REFERENCES properties(id) ON DELETE CASCADE,
     applicant_id UUID REFERENCES applicants(id) ON DELETE CASCADE,
     status application_status DEFAULT 'pending',
@@ -50,7 +51,6 @@ CREATE TABLE property_applications (
     pets BOOLEAN DEFAULT FALSE,
     pet_details TEXT,
     notes TEXT
-
 );
 
 INSERT INTO storage.buckets
@@ -88,6 +88,7 @@ CREATE INDEX idx_property_applications_applicant_id ON property_applications(app
 CREATE INDEX idx_application_documents_application_id ON application_documents(application_id);
 CREATE INDEX idx_tenants_applicant_id ON tenants(applicant_id);
 CREATE INDEX idx_tenants_property_id ON tenants(property_id);
+CREATE INDEX idx_property_applications_organization_id ON property_applications(organization_id);
 
 -- Create policies for row-level security
 

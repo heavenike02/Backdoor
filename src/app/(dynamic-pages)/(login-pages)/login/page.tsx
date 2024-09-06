@@ -8,5 +8,15 @@ const SearchParamsSchema = z.object({
 
 export default function LoginPage({ searchParams }: { searchParams: unknown }) {
   const { next, nextActionType } = SearchParamsSchema.parse(searchParams);
-  return <Login next={next} nextActionType={nextActionType} />;
+
+  return (
+    <>
+    <Login next={next} nextActionType={nextActionType} />
+    
+    </>
+  )
+  
+  
+  
+  
 }

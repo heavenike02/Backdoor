@@ -10,32 +10,34 @@ import { fetchPropertiesByOrganizationId } from "./property-queries"
 import { useQuery } from '@tanstack/react-query'
 import { LoadingSpinner } from '../LoadingSpinner'
 import { Skeleton } from '../ui/skeleton'
+import { getPropertyCountByOrganizationId } from './property-queries'
 
 
 
-const PropertyStats = () => (
+
+const PropertyStats = ({ organizationId }: { organizationId: string }) => (
   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
     <StatCard
-      title="Total Revenue"
-      value="$45,231.89"
+      title="Total Properties"
+      value={36}
       change="+20.1% from last month"
       icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
     />
     <StatCard
       title="Subscriptions"
-      value="+2350"
+      value={2350}
       change="+180.1% from last month"
       icon={<Users className="h-4 w-4 text-muted-foreground" />}
     />
     <StatCard
       title="Sales"
-      value="+12,234"
+      value={12234}
       change="+19% from last month"
       icon={<CreditCard className="h-4 w-4 text-muted-foreground" />}
     />
     <StatCard
       title="Active Now"
-      value="+573"
+      value={573}
       change="+201 since last hour"
       icon={<Activity className="h-4 w-4 text-muted-foreground" />}
     />
@@ -55,7 +57,7 @@ const PropertyTableWrapper = ({ organizationId }: { organizationId: string }) =>
   if (!data ) return <div>No properties found</div>
   
 
-  return <PropertyDataTable data={data} />
+  return <PropertyDataTable data={data} organizationId={organizationId} />
 }
 
 export function PropertyPage({ organizationId }: { organizationId: string }) {
@@ -70,7 +72,7 @@ export function PropertyPage({ organizationId }: { organizationId: string }) {
           </Button>
         </Link>
       </div>
-      <PropertyStats />
+      <PropertyStats organizationId={organizationId} />
       <Suspense fallback={<Skeleton className="h-50 w-full" />}>
       <PropertyTableWrapper organizationId={organizationId} />
       </Suspense>

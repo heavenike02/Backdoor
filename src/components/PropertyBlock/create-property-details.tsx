@@ -1,12 +1,10 @@
-import React from 'react';
-import { useFieldArray } from 'react-hook-form';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { BedDouble, X } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { BedDouble, X } from 'lucide-react';
+import { useFieldArray } from 'react-hook-form';
 
 
 import { DatePicker } from '@/components/ui/date-picker';
@@ -27,78 +25,113 @@ export const StepTwo = ({ form }) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-      <FormField
-        control={form.control}
-        name="rent_price"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Rent Price</FormLabel>
-            <FormControl>
-              <Input className="w-full"
-               type="number" 
-              placeholder="Please enter the total rent price of the property" 
-              {...field}
-              onChange={(e) => field.onChange(Number(e.target.value))} 
-              />
-               
-              
-            </FormControl>
-            <FormDescription>
-            Please enter the total rent price of the property per month
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+        <FormField
+          control={form.control}
+          name="rent_price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rent Price</FormLabel>
+              <FormControl>
+                <Input className="w-full"
+                  type="number"
+                  placeholder="Please enter the total rent price of the property"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
 
-      <FormField
-        control={form.control}
-        name="rental_capacity"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Occupancy</FormLabel>
-            <FormControl>
-              <Input className="w-full" 
-              type="number" 
-              placeholder="Enter the maximum number of tenants" 
-              {...field} 
-              onChange={(e) => field.onChange(Number(e.target.value))} />
-            </FormControl>
-            <FormDescription>
-              Enter the maximum number of tenants this property can accommodate
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+
+              </FormControl>
+              <FormDescription>
+                Please enter the total rent price of the property per month
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="rental_capacity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Occupancy</FormLabel>
+              <FormControl>
+                <Input className="w-full"
+                  type="number"
+                  placeholder="Enter the maximum number of tenants"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))} />
+              </FormControl>
+              <FormDescription>
+                Enter the maximum number of tenants this property can accommodate
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
-      
-      <FormField
-        control={form.control}
-        name="rent_cycle"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Rent Cycle</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="rent_cycle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rent Cycle</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a rent cycle" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {rentCycleOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>Choose how often the rent should be paid</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="security_deposit"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Security Deposit</FormLabel>
               <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a rent cycle" />
-                </SelectTrigger>
+                <Input
+                  type="number"
+                  placeholder="Enter the security deposit amount"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
               </FormControl>
-              <SelectContent>
-                {rentCycleOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormDescription>Choose how often the rent should be paid</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+              <FormDescription>
+                Enter the security deposit amount for this property
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+
+
+
+
+
+                 
+      
+
+
+
 
 
       <FormField
@@ -120,7 +153,7 @@ export const StepTwo = ({ form }) => {
           </FormItem>
         )}
       />
-       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
         <FormField
           control={form.control}
           name="num_floors"
@@ -128,11 +161,11 @@ export const StepTwo = ({ form }) => {
             <FormItem className="flex-1">
               <FormLabel>Number of Floors</FormLabel>
               <FormControl>
-                <Input className="w-full" type="number" placeholder="Enter the number of floors" {...field} 
-                onChange={(e) => field.onChange(Number(e.target.value))} />
+                <Input className="w-full" type="number" placeholder="Enter the number of floors" {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormDescription>
-              
+
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -146,11 +179,11 @@ export const StepTwo = ({ form }) => {
             <FormItem className="flex-1">
               <FormLabel>Number of Bathrooms</FormLabel>
               <FormControl>
-                <Input className="w-full" type="number" placeholder="Enter the number of bathrooms" {...field} 
-                onChange={(e) => field.onChange(Number(e.target.value))} />
+                <Input className="w-full" type="number" placeholder="Enter the number of bathrooms" {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormDescription>
-               
+
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -168,8 +201,8 @@ export const StepTwo = ({ form }) => {
               Add a bedroom to the property to screen a tenant against a specific room
             </p>
           </div>
-          <Button 
-            type="button" 
+          <Button
+            type="button"
             variant="outline"
             onClick={() => append({ name: "", beds: 1, rent: 0 })}
             className="w-full sm:w-auto"
@@ -180,9 +213,9 @@ export const StepTwo = ({ form }) => {
 
         {fields.map((field, index) => (
           <Card key={field.id} className="shadow-sm relative">
-            <Button 
-              type="button" 
-              variant="ghost" 
+            <Button
+              type="button"
+              variant="ghost"
               onClick={() => remove(index)}
               className="absolute top-2 right-2 h-8 w-8 p-0"
             >
@@ -214,11 +247,11 @@ export const StepTwo = ({ form }) => {
                     <FormItem className="flex-1">
                       <FormLabel>Number of Beds</FormLabel>
                       <FormControl>
-                        <Input className="w-full" 
-                        type="number" 
-                        placeholder="Number of Beds" 
-                        {...field} 
-                        onChange={(e) => field.onChange(Number(e.target.value))} />
+                        <Input className="w-full"
+                          type="number"
+                          placeholder="Number of Beds"
+                          {...field}
+                          onChange={(e) => field.onChange(Number(e.target.value))} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -232,7 +265,7 @@ export const StepTwo = ({ form }) => {
                       <FormLabel>Rent Price</FormLabel>
                       <FormControl>
                         <Input className="w-full" type="number" placeholder="Rent Price" {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))} />
+                          onChange={(e) => field.onChange(Number(e.target.value))} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

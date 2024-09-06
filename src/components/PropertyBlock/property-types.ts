@@ -2,7 +2,7 @@
 export interface Property {
     id: string;
     created_at: Date;
-    organization_id: string;
+    
     property_type: 'Detached' | 'Semi Detached' | 'Terraced' | 'Flat' | 'Studio Flat' | 'Converted Flat' | 'Purpose Built' | 'Bungalow' | 'Corner House' | 'Commercial' | 'Other' | null;
     is_furnished: boolean;
     num_bathrooms: number;
@@ -26,4 +26,6 @@ export interface Property {
     capacity: number;
     is_application_available: boolean;
     available_from: Date | null;
+    
+
   }

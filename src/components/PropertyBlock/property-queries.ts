@@ -122,3 +122,25 @@ export async function fetchPropertyById(id: string): Promise<SAPayload<Property 
     return { status: 'error', message: 'Failed to fetch property' };
   }
 }
+
+// property count by organization id
+// ... existing code ...
+
+// Property count by organization id
+export async function getPropertyCountByOrganizationId(organizationId: string): Promise<number> {
+  const supabase = createSupabaseUserServerActionClient();
+  try {
+    const { count, error } = await supabase
+      .from('properties')
+      .select('*', { count: 'exact', head: true })
+      .eq('organization_id', organizationId);
+
+    if (error) throw error;
+
+    return count ?? 0;
+  } catch (error) {
+    console.error("Error fetching property count:", error);
+    throw new Error('Failed to fetch property count');
+  }
+}
+

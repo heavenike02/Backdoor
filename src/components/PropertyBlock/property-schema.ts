@@ -40,7 +40,7 @@ export type Bedroom = z.infer<typeof BedroomSchema>;
 export const PropertySchema = z.object({
   id: z.string().uuid(),
   created_at: z.string().transform((str) => new Date(str)),
-  organization_id: z.string().uuid(),
+ 
   
   property_type: PropertyTypeSchema.nullable(),
   is_furnished: z.boolean().default(false),

@@ -2,10 +2,11 @@
 import { createSupabaseUserServerActionClient } from '@/supabase-clients/user/createSupabaseUserServerActionClient';
 import type { AuthProvider, SAPayload } from '@/types';
 import { toSiteURL } from '@/utils/helpers';
-
+import { UserType } from '@/types/userTypes';
 export const signUp = async (
   email: string,
   password: string,
+  userType: UserType,
 ): Promise<SAPayload> => {
   const supabase = createSupabaseUserServerActionClient();
 
@@ -14,6 +15,7 @@ export const signUp = async (
     password,
     options: {
       emailRedirectTo: toSiteURL('/auth/callback'),
+      
     },
   });
   if (error) {
