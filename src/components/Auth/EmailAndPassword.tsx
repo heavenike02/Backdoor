@@ -5,14 +5,20 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
+
+
 export const EmailAndPassword = ({
   onSubmit,
   view,
   isLoading,
+  signUpUrl,
+  loginUrl,
 }: {
   onSubmit: (data: { email: string; password: string }) => void;
   view: 'sign-in' | 'sign-up';
   isLoading: boolean;
+  signUpUrl: string;
+  loginUrl: string;
 }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -75,7 +81,7 @@ export const EmailAndPassword = ({
           {view === 'sign-in' ? (
             <div className="text-sm">
               <Link
-                href="/sign-up"
+                href={signUpUrl}
                 className="font-medium text-muted-foreground hover:text-foreground"
               >
                 Sign up instead?
@@ -84,7 +90,7 @@ export const EmailAndPassword = ({
           ) : (
             <div className="text-sm">
               <Link
-                href="/login"
+                href={loginUrl}
                 className="font-medium text-muted-foreground hover:text-foreground"
               >
                 Login instead?

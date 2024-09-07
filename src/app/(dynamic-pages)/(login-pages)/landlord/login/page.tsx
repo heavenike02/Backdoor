@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SignUp } from './Signup';
+import { Login } from './Login';
 import { AuthLayout } from '@/components/Auth/auth-layout';
 
 const SearchParamsSchema = z.object({
@@ -7,19 +7,24 @@ const SearchParamsSchema = z.object({
   nextActionType: z.string().optional(),
 });
 
-export default function SignupPage({
-  searchParams,
-}: {
-  searchParams: unknown;
-}) {
+
+export default function LoginPage({ searchParams }: { searchParams: unknown }) {
   const { next, nextActionType } = SearchParamsSchema.parse(searchParams);
+
   return (
     <>
-      <AuthLayout>
-        <SignUp next={next} nextActionType={nextActionType} />
-      </AuthLayout>
+   <AuthLayout  link="/tenant/login" text="Log In as Tenant"> 
       
-    </>
+      <Login next={next} nextActionType={nextActionType} />
+     
+      
+    </AuthLayout>
     
-  );
+    
+    </>
+  )
+  
+  
+  
+  
 }

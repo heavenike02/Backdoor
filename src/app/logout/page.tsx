@@ -15,7 +15,7 @@ export default function Logout() {
 
     return (
       <div className="flex items-center justify-center h-screen">
-        <Spinner />
+        <LoadingSpinner />
       </div>
   );
 }

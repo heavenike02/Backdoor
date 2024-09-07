@@ -15,7 +15,7 @@ export default function SignupPage({
   const { next, nextActionType } = SearchParamsSchema.parse(searchParams);
   return (
     <>
-      <AuthLayout>
+      <AuthLayout link="/tenant/sign-up" text="Sign Up as Tenant">
         <SignUp next={next} nextActionType={nextActionType} />
       </AuthLayout>
       
