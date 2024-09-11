@@ -41,7 +41,7 @@ export function ExternalNavigation() {
                 alt="logo"
                 className="hidden dark:block h-8 w-8"
               />
-              <span className="hidden font-bold lg:inline-block">acme</span>
+              <span className="hidden font-bold lg:inline-block">Backdoor</span>
             </div>
           </Link>
         </div>
@@ -50,7 +50,7 @@ export function ExternalNavigation() {
           {isHome && (
             <div className="ml-6 hidden lg:block space-x-2">
               <BookDemo />
-              <Link href="/login">
+              <Link href="/landlord/login">
                 <Button variant="default" size="default" className="group">
                   Log In
                   <svg
@@ -81,8 +81,8 @@ export function ExternalNavigation() {
           <div className="flex flex-col items-start w-full space-y-4 ">
             <div className="w-full flex justify-center p-4">
               <BookDemo buttonWidth="100%" /> {/* Updated width to match Log In button */}
-            </div>
-            <Link href="/login" className="px-4 w-full">
+                </div>
+                <Link href="/landlord/login" className="px-4 w-full">
               <Button variant="default" size="default" className="group w-full">
                 Log In
                 <svg

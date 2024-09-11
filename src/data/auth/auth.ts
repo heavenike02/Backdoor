@@ -16,6 +16,7 @@ export const signUp = async (
     options: {
       emailRedirectTo: toSiteURL('/auth/callback'),
       
+      
     },
   });
   if (error) {

@@ -29,7 +29,7 @@ export function Footer() {
                 </div>
               </Link>
               <p className="max-w-[350px] dark:font-light">
-                Acme Inc. 123 Acme Street, London, UK, SW1A 1AA
+              Backdoor. Galway, Ireland
               </p>
             </div>
             <div className="flex lg:justify-end  w-full items-start gap-10 lg:gap-20 flex-wrap">
