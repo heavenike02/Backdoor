@@ -20,6 +20,7 @@ const protectedPagePrefixes = [
   `/settings(/.*)?`,
   `/invitations`,
   `/render/(.*)?`,
+  `/tenant/dashboard(/.*)?`,
   onboardingPaths,
 ];
 
@@ -42,10 +43,14 @@ function shouldOnboardUser(pathname: string, user: User | undefined) {
       onboardingHasCompletedProfile,
       onboardingHasCreatedOrganization,
     } = userMetadata;
+
+    // Check if user is a tenant
+    const isTenant = userMetadata.userType === 'tenant'; // Assuming userType is part of user metadata
+
     if (
       !onboardingHasAcceptedTerms ||
       !onboardingHasCompletedProfile ||
-      !onboardingHasCreatedOrganization
+      (!isTenant && !onboardingHasCreatedOrganization) // Skip check for tenants
     ) {
       return true;
     }
@@ -68,11 +73,11 @@ export async function middleware(req: NextRequest) {
     // user is possibly logged in, but lets validate session
     const user = await supabase.auth.getUser();
     if (user.error) {
-      return NextResponse.redirect(toSiteURL('/login'));
+      return NextResponse.redirect(toSiteURL('/landlord/login'));
     }
   }
   if (isProtectedPage(req.nextUrl.pathname) && !maybeUser) {
-    return NextResponse.redirect(toSiteURL('/login'));
+    return NextResponse.redirect(toSiteURL('/landlord/login'));
   }
   return res;
 }

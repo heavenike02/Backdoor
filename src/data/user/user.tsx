@@ -12,6 +12,7 @@ import slugify from 'slugify';
 import urlJoin from 'url-join';
 import ConfirmAccountDeletionEmail from '../../../emails/account-deletion-request';
 import { refreshSessionAction } from './session';
+import { UserType } from '@/types/userTypes';
 
 export async function getIsAppAdmin(): Promise<boolean> {
   const user = await serverGetLoggedInUser();
@@ -278,3 +279,22 @@ export async function requestAccountDeletion(): Promise<
     data,
   };
 }
+
+export const getUserType = async (userId: string): Promise<UserType> => {
+  const supabase = createSupabaseUserServerComponentClient();
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select('user_type')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error('User profile not found');
+  }
+
+  return data.user_type;
+};

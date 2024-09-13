@@ -32,6 +32,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { UserType } from '@/types/userTypes';
 const TermsDetailDialog = dynamic(
   () => import('./TermsDetailDialog').then((mod) => mod.TermsDetailDialog),
   {
@@ -70,7 +71,7 @@ function TermsAcceptance({ onSuccess }: TermsAcceptanceProps) {
       <CardContent>
         <div className=" space-y-2">
           <T.Small>
-            These terms and conditions govern the use of backdoor’s
+            These terms and conditions govern the use of backdoor's
             products and services. They're designed to ensure a smooth and
             secure experience for you.
           </T.Small>
@@ -339,6 +340,7 @@ type UserOnboardingFlowProps = {
   userProfile: Table<'user_profiles'>;
   onboardingStatus: AuthUserMetadata;
   userEmail: string | undefined;
+  userType: UserType;
 };
 
 function getInitialFlowState(
@@ -369,7 +371,7 @@ function getInitialFlowState(
   return 'COMPLETE';
 }
 
-function getAllFlowStates(onboardingStatus: AuthUserMetadata): FLOW_STATE[] {
+function getAllFlowStates(onboardingStatus: AuthUserMetadata, userType: UserType): FLOW_STATE[] {
   const {
     onboardingHasAcceptedTerms,
     onboardingHasCompletedProfile,
@@ -382,7 +384,7 @@ function getAllFlowStates(onboardingStatus: AuthUserMetadata): FLOW_STATE[] {
   if (!onboardingHasCompletedProfile) {
     flowStates.push('PROFILE');
   }
-  if (!onboardingHasCreatedOrganization) {
+  if (!onboardingHasCreatedOrganization && userType === 'landlord') {
     flowStates.push('ORGANIZATION');
   }
   flowStates.push('COMPLETE');
@@ -393,14 +395,15 @@ export function UserOnboardingFlow({
   userProfile,
   onboardingStatus,
   userEmail,
+  userType,
 }: UserOnboardingFlowProps) {
   const flowStates = useMemo(
-    () => getAllFlowStates(onboardingStatus),
-    [onboardingStatus],
+    () => getAllFlowStates(onboardingStatus, userType),
+    [onboardingStatus, userType]
   );
   const initialStep = useMemo(
     () => getInitialFlowState(flowStates, onboardingStatus),
-    [flowStates, onboardingStatus],
+    [flowStates, onboardingStatus]
   );
   const [currentStep, setCurrentStep] = useState<FLOW_STATE>(initialStep);
   const nextStep = useCallback(() => {
@@ -410,14 +413,18 @@ export function UserOnboardingFlow({
     }
   }, [currentStep, flowStates]);
 
-  const { replace } = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (currentStep === 'COMPLETE') {
-      // Redirect to dashboard
-      replace('/dashboard');
+      // Redirect based on user type
+      if (userType === 'tenant') {
+        router.replace('/tenant/dashboard');
+      } else {
+        router.replace('/dashboard');
+      }
     }
-  }, [currentStep]);
+  }, [currentStep, userType, router]);
 
   return (
     <>

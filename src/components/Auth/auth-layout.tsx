@@ -64,7 +64,7 @@ export function AuthLayout({ children, link, text }: { children: ReactNode; link
     return (
         <>
 
-            <div className="container relative flex flex-col items-center justify-center h-screen md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+            <div className=" container relative flex flex-col items-center justify-center h-screen md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 
                 <SidebarContent />
                 <div className="lg:p-8 flex-grow">

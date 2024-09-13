@@ -248,6 +248,9 @@ dependencies:
   react-email:
     specifier: ^1.9.5
     version: 1.10.1(encoding@0.1.13)
+  react-error-boundary:
+    specifier: ^4.0.13
+    version: 4.0.13(react@18.3.1)
   react-hook-form:
     specifier: ^7.50.1
     version: 7.52.2(react@18.3.1)
@@ -11130,6 +11133,15 @@ packages:
       tree-cli: 0.6.7
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /react-error-boundary@4.0.13(react@18.3.1):
+    resolution: {integrity: sha512-b6PwbdSv8XeOSYvjt8LpgpKrZ0yGdtZokYwkwV2wlcZbxgopHX/hgPl5VgpnoVOWd868n1hktM8Qm4b+02MiLQ==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.25.0
+      react: 18.3.1
     dev: false
 
   /react-hook-form@7.52.2(react@18.3.1):

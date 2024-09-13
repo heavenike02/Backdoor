@@ -6,9 +6,9 @@ export type UserRoles = {
 
 export type UserRole = UserRoles[keyof UserRoles];
 
-export type UserType = {
-  LANDLORD: 'landlord',
-  TENANT: 'tenant',
+export interface UserTypes {
+  LANDLORD: 'landlord';
+  TENANT: 'tenant';
 }
 
 export type UserType = UserTypes[keyof UserTypes];

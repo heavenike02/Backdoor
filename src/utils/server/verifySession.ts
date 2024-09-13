@@ -21,7 +21,7 @@ export const verifySession = cache(async () => {
   }
 
   if (!session?.user) {
-    redirect('/login');
+    redirect('/landlord/login');
   }
 
   return session.user;

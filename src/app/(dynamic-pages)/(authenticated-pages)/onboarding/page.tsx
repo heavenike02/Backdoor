@@ -4,7 +4,7 @@ import {
   setDefaultOrganization,
 } from '@/data/user/organizations';
 
-import { getUserProfile } from '@/data/user/user';
+import { getUserProfile, getUserType } from '@/data/user/user';
 import { serverGetLoggedInUser } from '@/utils/server/serverGetLoggedInUser';
 import { authUserMetadataSchema } from '@/utils/zod-schemas/authUserMetadata';
 import { UserOnboardingFlow } from './OnboardingFlow';
@@ -33,20 +33,22 @@ async function getDefaultOrganizationOrSet(): Promise<string | null> {
 }
 
 const getOnboardingConditions = async (userId: string) => {
-  const [userProfile, defaultOrganizationId] = await Promise.all([
+  const [userProfile, defaultOrganizationId, userType] = await Promise.all([
     getUserProfile(userId),
     getDefaultOrganizationOrSet(),
+    getUserType(userId),
   ]);
 
   return {
     userProfile,
     defaultOrganizationId,
+    userType,
   };
 };
 
 export default async function Onboarding() {
   const user = await serverGetLoggedInUser();
-  const { userProfile } = await getOnboardingConditions(user.id);
+  const { userProfile, userType } = await getOnboardingConditions(user.id);
   const onboardingStatus = authUserMetadataSchema.parse(user.user_metadata);
   return (
     <div className="flex flex-col items-center justify-center h-full fixed inset-0">
@@ -54,6 +56,7 @@ export default async function Onboarding() {
         userProfile={userProfile}
         onboardingStatus={onboardingStatus}
         userEmail={user.email}
+        userType={userType}
       />
     </div>
   );

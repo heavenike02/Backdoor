@@ -113,14 +113,18 @@ export function PropertyDataTable({ data, organizationId }: { data: Property[], 
 
         return (
           <>
-            
-            <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>Share  <Share2 className="h-4 w-4" /></Button>
+            <Button variant="secondary" onClick={(e) => {
+              e.preventDefault(); // Prevent the Link from triggering
+              e.stopPropagation(); // Stop the event from bubbling up
+              setIsDialogOpen(true);
+            }}>
+              Share <Share2 className="h-4 w-4" />
+            </Button>
             <ShareDialog 
               applicationUrl={`${process.env.NEXT_PUBLIC_SITE_URL}/application/${property.id}`}
               isOpen={isDialogOpen}
               onClose={() => setIsDialogOpen(false)}
             />
-           
           </>
         )
       },
@@ -243,17 +247,15 @@ export function PropertyDataTable({ data, organizationId }: { data: Property[], 
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                     
-                     
-                  <Link href={`/organization/${organizationId}/properties/${cell.row.original.id}/view`}>
-
-
-
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                      {cell.column.id === 'share' || cell.column.id === 'actions' ? (
+                        // Render share and actions columns without Link
+                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                      ) : (
+                        // Wrap other cells with Link
+                        <Link href={`/organization/${organizationId}/properties/${row.original.id}/view`}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Link>
                       )}
-                      </Link>
                     </TableCell>
                   ))}
                 </TableRow>

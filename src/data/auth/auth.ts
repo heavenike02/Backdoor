@@ -15,7 +15,8 @@ export const signUp = async (
     password,
     options: {
       emailRedirectTo: toSiteURL('/auth/callback'),
-      
+      data: { userType },
+
       
     },
   });
@@ -56,6 +57,7 @@ export const signInWithPassword = async (
 
 export const signInWithMagicLink = async (
   email: string,
+  userType: UserType,
   next?: string,
 ): Promise<SAPayload> => {
   const supabase = createSupabaseUserServerActionClient();
@@ -67,6 +69,7 @@ export const signInWithMagicLink = async (
     email,
     options: {
       emailRedirectTo: redirectUrl.toString(),
+      data: { userType },
     },
   });
 
@@ -84,6 +87,7 @@ export const signInWithMagicLink = async (
 
 export const signInWithProvider = async (
   provider: AuthProvider,
+   // Accept userType as a parameter
   next?: string,
 ): Promise<
   SAPayload<{
@@ -108,14 +112,22 @@ export const signInWithProvider = async (
     return { status: 'error', message: error.message };
   }
 
+
+
+
+  
+
   const providerUrl = data.url;
 
   return {
     status: 'success',
     data: {
       url: providerUrl,
+
+      
     },
   };
+  
 };
 
 export const resetPassword = async (email: string): Promise<SAPayload> => {

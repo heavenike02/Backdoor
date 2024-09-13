@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-// Enum schemas
-
 
 export const PropertyTypeSchema = z.enum([
   'Detached', 'Semi Detached', 'Terraced', 'Flat', 'Studio Flat',

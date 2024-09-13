@@ -18,17 +18,19 @@ import {
 } from '@/data/auth/auth';
 import { useSAToastMutation } from '@/hooks/useSAToastMutation';
 import { supabaseUserClientComponentClient } from '@/supabase-clients/user/supabaseUserClientComponentClient';
-import type { AuthProvider } from '@/types';
+  import type { AuthProvider } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
+import { UserType } from '@/types/userTypes';
 export function Login({
   next,
   nextActionType,
+  userType,
 }: {
   next?: string;
   nextActionType?: string;
+  userType: UserType;
 }) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -44,7 +46,7 @@ export function Login({
   }
   const magicLinkMutation = useSAToastMutation(
     async (email: string) => {
-      return await signInWithMagicLink(email, next);
+      return await signInWithMagicLink(email, userType, next);
     },
     {
       loadingMessage: 'Sending magic link...',
@@ -133,10 +135,10 @@ export function Login({
       ) : (
         <div className="space-y-8 bg-background p-6 rounded-lg shadow dark:border">
           <Tabs defaultValue="password" className="md:min-w-[400px]">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="password">Password</TabsTrigger>
               <TabsTrigger value="magic-link">Magic Link</TabsTrigger>
-              <TabsTrigger value="social-login">Social Login</TabsTrigger>
+              
             </TabsList>
             <TabsContent value="password">
               <Card className="border-none shadow-none">

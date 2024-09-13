@@ -72,44 +72,76 @@ export type Database = {
         }
         Relationships: []
       }
-      applicants: {
+      applicant_details: {
         Row: {
           annual_income: number | null
-          created_at: string
+          applicant_id: string | null
           credit_score: number | null
           current_address: string | null
           date_of_birth: string | null
-          email: string
-          employment_status: string | null
-          full_name: string
+          employment_type: string | null
+          gender: string | null
           id: string
-          phone: string | null
-          user_id: string | null
+          rental_history: Json[] | null
         }
         Insert: {
           annual_income?: number | null
-          created_at?: string
+          applicant_id?: string | null
           credit_score?: number | null
           current_address?: string | null
           date_of_birth?: string | null
-          email: string
-          employment_status?: string | null
-          full_name: string
+          employment_type?: string | null
+          gender?: string | null
           id?: string
-          phone?: string | null
-          user_id?: string | null
+          rental_history?: Json[] | null
         }
         Update: {
           annual_income?: number | null
-          created_at?: string
+          applicant_id?: string | null
           credit_score?: number | null
           current_address?: string | null
           date_of_birth?: string | null
-          email?: string
-          employment_status?: string | null
-          full_name?: string
+          employment_type?: string | null
+          gender?: string | null
           id?: string
-          phone?: string | null
+          rental_history?: Json[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applicant_details_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "applicants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      applicants: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone_number: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone_number?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone_number?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -125,27 +157,27 @@ export type Database = {
       application_documents: {
         Row: {
           application_id: string | null
-          document_type: string
           file_name: string
-          file_path: string
+          file_type: string
+          file_url: string
           id: string
-          upload_date: string | null
+          uploaded_at: string | null
         }
         Insert: {
           application_id?: string | null
-          document_type: string
           file_name: string
-          file_path: string
+          file_type: string
+          file_url: string
           id?: string
-          upload_date?: string | null
+          uploaded_at?: string | null
         }
         Update: {
           application_id?: string | null
-          document_type?: string
           file_name?: string
-          file_path?: string
+          file_type?: string
+          file_url?: string
           id?: string
-          upload_date?: string | null
+          uploaded_at?: string | null
         }
         Relationships: [
           {
@@ -652,6 +684,10 @@ export type Database = {
           id: string
           last_updated: string | null
           notes: string | null
+          occupants_count: number | null
+          organization_id: string | null
+          pet_details: string | null
+          pets: boolean | null
           property_id: string | null
           status: Database["public"]["Enums"]["application_status"] | null
         }
@@ -662,6 +698,10 @@ export type Database = {
           id?: string
           last_updated?: string | null
           notes?: string | null
+          occupants_count?: number | null
+          organization_id?: string | null
+          pet_details?: string | null
+          pets?: boolean | null
           property_id?: string | null
           status?: Database["public"]["Enums"]["application_status"] | null
         }
@@ -672,6 +712,10 @@ export type Database = {
           id?: string
           last_updated?: string | null
           notes?: string | null
+          occupants_count?: number | null
+          organization_id?: string | null
+          pet_details?: string | null
+          pets?: boolean | null
           property_id?: string | null
           status?: Database["public"]["Enums"]["application_status"] | null
         }
@@ -681,6 +725,13 @@ export type Database = {
             columns: ["applicant_id"]
             isOneToOne: false
             referencedRelation: "applicants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_applications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
           {
@@ -767,6 +818,38 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      screening_invitations: {
+        Row: {
+          applicant_id: string | null
+          id: string
+          invitation_date: string | null
+          notes: string | null
+          status: string | null
+        }
+        Insert: {
+          applicant_id?: string | null
+          id?: string
+          invitation_date?: string | null
+          notes?: string | null
+          status?: string | null
+        }
+        Update: {
+          applicant_id?: string | null
+          id?: string
+          invitation_date?: string | null
+          notes?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "screening_invitations_applicant_id_fkey"
+            columns: ["applicant_id"]
+            isOneToOne: false
+            referencedRelation: "applicants"
             referencedColumns: ["id"]
           },
         ]
@@ -933,18 +1016,21 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          user_type: Database["public"]["Enums"]["user_types"]
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           id: string
+          user_type?: Database["public"]["Enums"]["user_types"]
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          user_type?: Database["public"]["Enums"]["user_types"]
         }
         Relationships: [
           {
@@ -1069,6 +1155,7 @@ export type Database = {
         | "unpaid"
         | "paused"
       tenant_status: "active" | "inactive" | "former"
+      user_types: "landlord" | "tenant"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -21,13 +21,16 @@ ALTER TABLE "public"."organizations" OWNER TO "postgres";
 -- Name: user_profiles; Type: TABLE; Schema: public; Owner: postgres
 --
 
+
 CREATE TABLE "public"."user_profiles" (
   "id" "uuid" NOT NULL,
   "full_name" character varying,
   "avatar_url" character varying,
+  "user_type" "public"."user_types" DEFAULT 'landlord'::user_types NOT NULL,
   "created_at" timestamp WITH time zone DEFAULT "now"() NOT NULL
 );
 ALTER TABLE "public"."user_profiles" OWNER TO "postgres";
+
 
 CREATE TABLE "public"."customers" (
   "stripe_customer_id" character varying NOT NULL,

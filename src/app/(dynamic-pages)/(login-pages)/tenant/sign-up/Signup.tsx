@@ -19,13 +19,16 @@ import {
 import { useSAToastMutation } from '@/hooks/useSAToastMutation';
 import type { AuthProvider } from '@/types';
 import { useState } from 'react';
-
+import { UserType } from '@/types/userTypes';
 export function SignUp({
   next,
   nextActionType,
+  userType,
+  
 }: {
   next?: string;
   nextActionType?: string;
+  userType: UserType;
 }) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [resendData, setResendData] = useState<{
@@ -37,9 +40,9 @@ export function SignUp({
     async () => {
       if (!resendData) {
         throw new Error('No resend data');
-      }
-      return await signUp(resendData.email, resendData.password);
-    },
+        }
+        return await signUp(resendData.email, resendData.password, userType);
+      },
     {
       onSuccess: () => {
         setSuccessMessage('A confirmation link has been sent to your email!');
@@ -52,10 +55,7 @@ export function SignUp({
 
   const magicLinkMutation = useSAToastMutation(
     async (email: string) => {
-      // since we can't use the onSuccess callback here to redirect from here
-      // we pass on the `next` to the signInWithMagicLink function
-      // the user gets redirected from their email message
-      return await signInWithMagicLink(email, next);
+      return await signInWithMagicLink(email, userType, next); // Added userType
     },
     {
       loadingMessage: 'Sending magic link...',
@@ -79,7 +79,7 @@ export function SignUp({
   const passwordMutation = useSAToastMutation(
     async ({ email, password }: { email: string; password: string }) => {
       setResendData({ email, password });
-      return await signUp(email, password);
+      return await signUp(email, password, userType);
     },
     {
       onSuccess: () => {
@@ -105,7 +105,7 @@ export function SignUp({
       // since we can't use the onSuccess callback here to redirect from here
       // we pass on the `next` to the signInWithProvider function
       // the user gets redirected from the provider redirect callback
-      return signInWithProvider(provider, next);
+      return signInWithProvider(provider,  next);
     },
     {
       loadingMessage: 'Requesting login...',
@@ -135,10 +135,9 @@ export function SignUp({
       ) : (
         <div className="space-y-8 bg-background p-6 rounded-lg shadow dark:border">
           <Tabs defaultValue="password" className="md:min-w-[400px]">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="password">Password</TabsTrigger>
               <TabsTrigger value="magic-link">Magic Link</TabsTrigger>
-              <TabsTrigger value="social-login">Social Login</TabsTrigger>
             </TabsList>
 
             <TabsContent value="password">
